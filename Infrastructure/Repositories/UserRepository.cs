@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using UserManagement.Domain.Entities;
-using UserManagement.Domain.Interfaces;
-using UserManagement.Infrastructure.Data;
+using Domain.Entities;
+using Domain.Interfaces;
+using Infrastructure.Data;
 
-namespace UserManagement.Infrastructure.Repositories
+namespace Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {

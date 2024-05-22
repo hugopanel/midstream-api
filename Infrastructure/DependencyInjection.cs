@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using UserManagement.Domain.Interfaces;
-using UserManagement.Infrastructure.Data;
-using UserManagement.Infrastructure.Repositories;
+using Domain.Interfaces;
+using Infrastructure.Data;
+using Infrastructure.Repositories;
 
-namespace UserManagement.Infrastructure
+namespace Infrastructure
 {
     public static class DependencyInjection
     {

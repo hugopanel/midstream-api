@@ -6,10 +6,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using UserManagement.Application.Services;
-using UserManagement.Infrastructure;
+using Application.Services;
+using Infrastructure;
 
-namespace UserManagement.Api
+namespace Api
 {
     public class Startup
     {
