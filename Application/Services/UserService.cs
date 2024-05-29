@@ -76,7 +76,7 @@ namespace Application.Services
             var toAddress = new MailAddress(email);
             var fromPassword = "njoewmtozlrhoyzl";
             var subject = "Confirm Your Email";
-            var body = $"Click the following link to confirm your email: http://localhost:5034/api/account/confirm?token={token}";
+            var body = $"Click the following link to confirm your email: http://localhost:5101/api/account/confirm?token={token}";
 
 
             var smtp = new SmtpClient
@@ -97,6 +97,29 @@ namespace Application.Services
             {
                 await smtp.SendMailAsync(message);
             }
+        }
+
+        public string GenerateResetPasswordToken(string email)
+        {
+            var claims = new[]
+            {
+            new Claim("EmailAddress", email)
+            };
+
+            Console.WriteLine(email);
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(1), // Set expiration time for token
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

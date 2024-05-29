@@ -46,8 +46,6 @@ namespace Api.Controllers
             }
         }
 
-
-
         [HttpGet("confirm")]
         public async Task<IActionResult> ConfirmEmail(string token)
         {
@@ -119,6 +117,21 @@ namespace Api.Controllers
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        [HttpPost("forgot_password")]
+        public async Task<IActionResult> Forgot_Password(RegisterRequest request)
+        {
+            try
+            {
+                var token = _userService.GenerateConfirmationToken(request.Username, request.Password, request.Email);
+                await _userService.SendConfirmationEmailAsync(request.Email, token);
+                return Ok("Registration successful. Please check your email to confirm your account.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [Authorize] // Requires authentication
