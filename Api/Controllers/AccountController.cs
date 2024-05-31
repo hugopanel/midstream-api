@@ -1,8 +1,7 @@
-using System;
+
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Application.Services;
 using Api.Models;
 using Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 using Infrastructure.Data;
-using BCrypt.Net;
 
 namespace Api.Controllers
 {
