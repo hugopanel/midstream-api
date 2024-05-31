@@ -1,6 +1,28 @@
+# Fichier de test pour l'API
 @Api_HostAddress = http://localhost:5101
+@AccountController = /api/Account
 
-GET {{Api_HostAddress}}/weatherforecast/
+
+### Register
+
+POST {{Api_HostAddress}}{{AccountController}}/register
 Accept: application/json
+Content-Type: application/json
 
-###
+{
+    "username": "test",
+    "email": "test@test.com",
+    "password": "Test1234!"
+}
+
+### Login
+POST {{Api_HostAddress}}{{AccountController}}/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "username": "test",
+    "password": "Test123"
+}
+
+### 
