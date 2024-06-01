@@ -1,8 +1,7 @@
 namespace Api.Models
 {
-    public class LoginRequest
+    public class ConfirmResetRequest
     {
-        public string Email { get; set; }
         public string Password { get; set; }
     }
 }

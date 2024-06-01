@@ -26,7 +26,7 @@ namespace Application.Services
 
         public async Task<bool> ValidateUserAsync(string username, string password)
         {
-            var user = await _userRepository.GetUserByUsernameAsync(username);
+            var user = await _userRepository.GetUserByEmailAsync(username);
             if (user == null)
                 return false;
 
@@ -120,6 +120,35 @@ namespace Application.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task SendResetEmailAsync(string email, string token)
+        {
+            var fromAddress = new MailAddress("midstream42@gmail.com", "Midstream");
+            var toAddress = new MailAddress(email);
+            var fromPassword = "njoewmtozlrhoyzl";
+            var subject = "Reset your password";
+            var body = $"Click the following link to reset your password: http://localhost:5101/api/account/confirm_reset?token={token}";
+
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+            };
+
+            using (var message = new MailMessage(fromAddress, toAddress)
+            {
+                Subject = subject,
+                Body = body
+            })
+            {
+                await smtp.SendMailAsync(message);
+            }
         }
     }
 }
