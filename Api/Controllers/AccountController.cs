@@ -35,15 +35,33 @@ namespace Api.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
-            try
+            var userAlreadyExists = await _userService.CheckIfUserAlreadyExists(request.Email);
+            if (userAlreadyExists)
             {
-                var token = _userService.GenerateConfirmationToken(request.Username, request.Password, request.Email);
-                await _userService.SendConfirmationEmailAsync(request.Email, token);
-                return Ok("Registration successful. Please check your email to confirm your account.");
+                var response = new RegisterResponse
+                {
+                    message = "An account already exists with this email address."
+                };
+                return BadRequest(response);
             }
-            catch (Exception ex)
+            else
             {
-                return BadRequest(ex.Message);
+                try
+                {
+                    var token = _userService.GenerateConfirmationToken(request.Email);
+                    Console.WriteLine("token ok");
+                    await _userService.SendConfirmationEmailAsync(request.Email, token);
+                    Console.WriteLine("OK");
+                    var response = new RegisterResponse
+                    {
+                        message = "Registration successful. Please check your email to confirm your account."
+                    };
+                    return Ok(response);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
         }
 
