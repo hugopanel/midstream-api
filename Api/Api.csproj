@@ -1,34 +1,37 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>true</InvariantGlobalization>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.4" />
-		<PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.5" />
-		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.12" />
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.4" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.2" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Application\Application.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="MediatR" Version="12.2.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.4"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.5"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.12"/>
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.4"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.4">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.5.2"/>
+    </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <ProjectReference Include="..\Application\Application.csproj"/>
+        <ProjectReference Include="..\Contracts\Contracts.csproj"/>
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
 </Project>

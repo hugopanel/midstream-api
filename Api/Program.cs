@@ -1,50 +1,44 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Application;
+using Application.Services;
+using Infrastructure;
 
-namespace Api
+var builder = WebApplication.CreateBuilder(args);
 {
-    public class Program
+    builder.Services.AddControllers();
+
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+
+
+    builder.Services.AddSwaggerGen();
+    builder.Services.AddSwaggerGen(c =>
     {
-        public static void Main(string[] args)
-        {
-            CreateHostBuilder(args).Build().Run();
-        }
+        c.SwaggerDoc("v1", new() { Title = "Api", Version = "v1" });
+    });
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-    }
+
+    builder.Services.AddApplication();
+    builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddScoped<UserService>();
+
+    builder.Services.AddAuthentication();
 }
-
-
-
-/*var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage(); 
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseRouting();
 
-app.UseHttpsRedirection();
+app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();*/
+app.Run();

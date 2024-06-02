@@ -2,7 +2,7 @@ using Domain.Entities;
 
 namespace Domain.Interfaces;
 
-public interface IModule 
+public interface IModule
 {
     public string Name { get; set; }
     public string Description { get; set; }
