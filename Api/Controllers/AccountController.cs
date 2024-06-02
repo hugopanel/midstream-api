@@ -54,7 +54,7 @@ namespace Api.Controllers
                     Console.WriteLine("OK");
                     var response = new RegisterResponse
                     {
-                        message = "Registration successful. Please check your email to confirm your account."
+                        message = "Registration successful. Please check your email to confirm your account.",
                     };
                     return Ok(response);
                 }
@@ -65,8 +65,8 @@ namespace Api.Controllers
             }
         }
 
-        [HttpGet("confirm")]
-        public async Task<IActionResult> ConfirmEmail(string token)
+        [HttpPost("confirm")]
+        public async Task<IActionResult> ConfirmRegister([FromQuery] string token, [FromBody] ConfirmRegisterRequest request)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Secret"]);
@@ -84,22 +84,42 @@ namespace Api.Controllers
             try
             {
                 var claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
-                var username = claimsPrincipal.FindFirst("username")?.Value;
-                var password = claimsPrincipal.FindFirst("password")?.Value;
+
                 var email = claimsPrincipal.FindFirst("EmailAddress")?.Value;
 
-                // Create the user in the database using extracted information
-                var user = new User
+                var userAlreadyExists = await _userService.CheckIfUserAlreadyExists(email);
+
+                if (userAlreadyExists)
                 {
-                    Username = username,
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
-                    Email = email
-                };
+                    var response = new RegisterResponse
+                    {
+                        message = "An account already exists with this email address."
+                    };
+                    return BadRequest(response);
+                }
+                else
+                {
+                    // Create the user in the database using extracted information
+                    var user = new User
+                    {
+                        Username = request.Username,
+                        FirstName = request.FirstName,
+                        LastName = request.LastName,
+                        PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                        Salt = new byte[] { 0x3E, 0x4D, 0x6C, 0x2A, 0x72, 0x9F, 0x8B, 0x1C, 0x5D, 0x8E, 0x2B, 0x4F, 0x5E, 0x6A, 0x7C, 0x8D },
+                        Email = email
+                    };
 
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
 
-                return Ok("Email confirmed and user registered.");
+                    var response = new RegisterResponse
+                    {
+                        message = "You are registered !",
+                    };
+
+                    return Ok(response);
+                }
             }
             catch (Exception ex)
             {
