@@ -24,9 +24,9 @@ namespace Application.Services
             _configuration = configuration;
         }
 
-        public async Task<bool> ValidateUserAsync(string username, string password)
+        public async Task<bool> ValidateUserAsync(string email, string password)
         {
-            var user = await _userRepository.GetUserByEmailAsync(username);
+            var user = await _userRepository.GetUserByEmailAsync(email);
             if (user == null)
                 return false;
 
@@ -45,12 +45,18 @@ namespace Application.Services
             await _userRepository.RegisterUserAsync(user);
         }
 
-        public string GenerateConfirmationToken(string username, string password, string email)
+        public async Task<bool> CheckIfUserAlreadyExists(string email)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(email);
+            if (user == null)
+                return false;
+            return true;
+        }
+
+        public string GenerateConfirmationToken(string email)
         {
             var claims = new[]
             {
-            new Claim("username", username),
-            new Claim("password", password),
             new Claim("EmailAddress", email)
             };
 
