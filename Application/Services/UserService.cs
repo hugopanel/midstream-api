@@ -134,7 +134,7 @@ namespace Application.Services
             var toAddress = new MailAddress(email);
             var fromPassword = "njoewmtozlrhoyzl";
             var subject = "Reset your password";
-            var body = $"Click the following link to reset your password: http://localhost:5101/api/account/confirm_reset?token={token}";
+            var body = $"Click the following link to reset your password: http://localhost:3000/reset_pwd?token={token}";
 
 
             var smtp = new SmtpClient

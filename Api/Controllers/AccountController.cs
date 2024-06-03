@@ -115,7 +115,7 @@ namespace Api.Controllers
 
                     var response = new RegisterResponse
                     {
-                        message = "You are registered !",
+                        message = "You are registered ! You are redirected to the login page, please log in.",
                     };
 
                     return Ok(response);
@@ -165,7 +165,13 @@ namespace Api.Controllers
             {
                 var token = _userService.GenerateResetPasswordToken(request.Email);
                 await _userService.SendResetEmailAsync(request.Email, token);
-                return Ok("Please check your email to reset your password.");
+
+                var response = new RegisterResponse
+                {
+                    message = "Please check your email to reset your password.",
+                };
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -212,7 +218,12 @@ namespace Api.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return Ok("Password changed");
+                var response = new RegisterResponse
+                {
+                    message = "Password changed successfully.",
+                };
+
+                return Ok(response);
             }
             catch (Exception ex)
             {
