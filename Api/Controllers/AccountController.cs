@@ -130,13 +130,33 @@ namespace Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
-            var isValid = await _userService.ValidateUserAsync(request.Email, request.Password);
-            if (!isValid)
-                return Unauthorized();
+            var userAlreadyExists = await _userService.CheckIfUserAlreadyExists(request.Email);
 
-            // Generate JWT token
-            var token = GenerateJwtToken(request.Email);
-            return Ok(new { Token = token });
+            if (!userAlreadyExists)
+            {
+                Console.WriteLine("no account");
+                var response = new RegisterResponse
+                {
+                    message = "There is no account associated with this email address."
+                };
+                return BadRequest(response);
+            }
+            else
+            {
+                var isValid = await _userService.ValidateUserAsync(request.Email, request.Password);
+                if (!isValid)
+                {
+                    var response = new RegisterResponse
+                    {
+                        message = "Wrong password for this email address."
+                    };
+                    return BadRequest(response);
+                }
+
+                // Generate JWT token
+                var token = GenerateJwtToken(request.Email);
+                return Ok(new { Token = token });
+            }
         }
 
         private string GenerateJwtToken(string username)
