@@ -1,7 +1,9 @@
 namespace Api.Models
 {
-    public class RegisterRequest
-    {
-        public string Email { get; set; }
-    }
+    public record RegisterRequest(
+        string Username,
+        string FirstName,
+        string LastName,
+        string Email
+    );
 }
