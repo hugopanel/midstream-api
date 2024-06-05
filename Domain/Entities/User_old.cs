@@ -1,4 +1,5 @@
-namespace Domain.Entities
+/*
+ * namespace Domain.Entities
 {
     public class User
     {
@@ -12,3 +13,4 @@ namespace Domain.Entities
         public List<Role> Roles { get; set; }
     }
 }
+*/

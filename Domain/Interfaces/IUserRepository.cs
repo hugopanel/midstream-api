@@ -1,4 +1,5 @@
-using System.Threading.Tasks;
+/*
+ * using System.Threading.Tasks;
 using Domain.Entities;
 
 namespace Domain.Interfaces
@@ -9,3 +10,4 @@ namespace Domain.Interfaces
         Task RegisterUserAsync(User user);
     }
 }
+*/

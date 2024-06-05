@@ -1,3 +1,5 @@
+/*
+
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
@@ -27,3 +29,4 @@ namespace Infrastructure.Repositories
         }
     }
 }
+*/
