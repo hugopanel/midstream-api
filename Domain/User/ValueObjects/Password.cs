@@ -4,11 +4,16 @@ namespace Domain.User.ValueObjects;
 
 public class Password
 {
-    private string _hashedPassword;
-
+    public string HashedPassword { get; private set; }
+    
     public Password(string hashedPassword)
     {
-        _hashedPassword = hashedPassword;
+        HashedPassword = hashedPassword;
+    }
+
+    private Password() // EF Core
+    {
+        
     }
 
     public static Password FromPlainText(string plainTextPassword)
@@ -26,12 +31,12 @@ public class Password
     public bool Verify(string plainTextPassword)
     {
         var passwordHasher = new PasswordHasher<object>();
-        var result = passwordHasher.VerifyHashedPassword(null!, _hashedPassword, plainTextPassword);
+        var result = passwordHasher.VerifyHashedPassword(null!, HashedPassword, plainTextPassword);
         return result == PasswordVerificationResult.Success;
     }
 
     public override string ToString()
     {
-        return _hashedPassword;
+        return HashedPassword;
     }
 }

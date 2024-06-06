@@ -24,7 +24,7 @@ public class ConfirmRegistrationCommandHandler(IUserRepository userRepository, I
             FirstName = command.firstName,
             LastName = command.lastName,
             Email = command.email,
-            Password = new Password(command.password)
+            Password = Password.FromPlainText(command.password)
         };
 
         // Add new user

@@ -17,18 +17,7 @@ namespace Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
-
-        // public async Task<User> GetUserByUsernameAsync(string username)
-        // {
-        //     return await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
-        // }
-        //
-        // public async Task RegisterUserAsync(User user)
-        // {
-        //     _context.Users.Add(user);
-        //     await _context.SaveChangesAsync();
-        // }
-
+        
         public User? GetUserByUsername(string username)
         {
             return _dbContext.Users.SingleOrDefault(u => u.Username == username);
@@ -53,7 +42,7 @@ namespace Infrastructure.Repositories
             return _dbContext.Users.SingleOrDefault(u => u.Email == email);
         }
 
-        public User? GetUserbyId(string id)
+        public User? GetUserById(string id)
         {
             return _dbContext.Users.SingleOrDefault(u => u.Id.ToString() == id);
         }

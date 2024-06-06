@@ -21,7 +21,7 @@ namespace Infrastructure.Data
             {
                 entity.OwnsOne(u => u.Password, pw =>
                 {
-                    pw.Property(p => p.ToString()).HasColumnName("PasswordHash").UsePropertyAccessMode(PropertyAccessMode.Field);
+                    pw.Property(p => p.HashedPassword).HasColumnName("PasswordHash").UsePropertyAccessMode(PropertyAccessMode.Field);
                 });
             });
         }
