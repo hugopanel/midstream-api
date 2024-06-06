@@ -7,6 +7,7 @@ using Application.Authentication.Commands;
 using Application.Authentication.Queries;
 using Domain.Entities;
 using MediatR;
+using System.Linq.Expressions;
 
 namespace Api.Controllers;
 
@@ -87,10 +88,20 @@ public class AuthenticationController : ControllerBase
     [HttpPost("ResetPassword")]
     public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
     {
-        var query = new ResetPasswordQuery(request.Email);
-        await _mediator.Send(query);
+        try
+        {
+            var query = new ResetPasswordQuery(request.Email);
+            await _mediator.Send(query);
 
-        return Ok();
+            var message = new AuthenticationResponseMessage("Email sent successfully");
+
+            return Ok(message);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the sending of the email.");
+            return BadRequest(errorMessage);
+        }
     }
 
     [Authorize]

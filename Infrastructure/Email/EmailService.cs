@@ -38,7 +38,7 @@ public class EmailService : IEmailService
         var fromPassword = "njoewmtozlrhoyzl";
         var subject = "Reset your password";
         var body =
-            $"Click the following link to reset your password: "; // TODO: Add link with token
+            $"Click the following link to reset your password: http://localhost:3000/reset_pwd?token={token}"; // TODO: Add link with token
 
         var smtp = new SmtpClient
         {
