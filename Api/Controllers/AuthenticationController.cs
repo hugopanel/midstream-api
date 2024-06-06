@@ -32,8 +32,7 @@ public class AuthenticationController : ControllerBase
         {
             var command = new RegisterQuery(request.Email);
             AuthenticationResult result = await _mediator.Send(command);
-            var successMessage = new AuthenticationResponseMessage("Registration successful. Please check your email to confirm your account.");
-            return Ok(successMessage);
+            return Ok(result);
         }
         catch (Exception ex)
         {
