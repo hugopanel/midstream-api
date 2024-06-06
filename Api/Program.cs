@@ -1,9 +1,6 @@
 using Application;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
-using Application.Common.Interfaces.Persistence;
-using Infrastructure.Repositories;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -21,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
             Name = "Authorization",
             In = Microsoft.OpenApi.Models.ParameterLocation.Header,
             Description = "JWT Bearer Token",
-            Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+            // Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
             BearerFormat = "JWT",
             Scheme = "bearer"
         });
@@ -37,7 +34,7 @@ var builder = WebApplication.CreateBuilder(args);
                         Id = "Bearer",
                         Type = ReferenceType.SecurityScheme
                     }
-                },
+                }, 
                 new List<string>()
             }
         });
