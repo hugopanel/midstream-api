@@ -1,14 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Api.Models;
 using Application.Authentication;
 using Application.Authentication.Commands;
 using Application.Authentication.Queries;
-using Domain.Entities;
 using Contracts;
 using MediatR;
 
