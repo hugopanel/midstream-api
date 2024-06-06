@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
 using Domain.User;
+using Domain.User.ValueObjects;
 
 namespace Infrastructure.Data
 {
@@ -11,5 +12,18 @@ namespace Infrastructure.Data
         }
 
         public DbSet<User> Users { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.OwnsOne(u => u.Password, pw =>
+                {
+                    pw.Property(p => p._hashedPassword).HasColumnName("PasswordHash").UsePropertyAccessMode(PropertyAccessMode.Field);
+                });
+            });
+        }
     }
 }

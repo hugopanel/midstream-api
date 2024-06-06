@@ -4,6 +4,7 @@ using Application.Common.Interfaces.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
 using Domain.User;
+using Domain.User.ValueObjects;
 using Infrastructure.Data;
 
 namespace Infrastructure.Repositories
@@ -33,9 +34,18 @@ namespace Infrastructure.Repositories
             return _dbContext.Users.SingleOrDefault(u => u.Username == username);
         }
 
-        public User? GetUserByUsernameAndPassword(string username, string password)
+        public User? GetUserByEmailAndPassword(string email, string password)
         {
-            return _dbContext.Users.SingleOrDefault(u => u.Username == username && u.Password.Verify(password));
+            var user = _dbContext.Users
+            .Include(u => u.Password)
+            .SingleOrDefault(u => u.Email == email);
+
+            if (user != null && user.Password.Verify(password))
+            {
+                return user;
+            }
+
+            return null;
         }
 
         public User? GetUserByEmail(string email)
