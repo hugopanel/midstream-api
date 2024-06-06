@@ -2,7 +2,9 @@ namespace Domain.User.ValueObjects;
 
 public class Password
 {
-    public readonly string _hashedPassword;
+    private string _hashedPassword;
+
+    public string HashedPassword { get => _hashedPassword; init => _hashedPassword = value; }
 
     public Password() { }
 

@@ -58,7 +58,7 @@ public class AuthenticationController : ControllerBase
     [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        var query = new LoginQuery(request.Username, request.Password);
+        var query = new LoginQuery(request.Email, request.Password);
         AuthenticationResult result = await _mediator.Send(query);
 
         return Ok(result);
