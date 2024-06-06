@@ -45,12 +45,13 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         return GenerateGenericStringTokenWithClaims(claims);
     }
 
-    public string GenerateLoginToken(string username, string firstName, string lastName, string email)
+    public string GenerateLoginToken(Guid id, string username, string firstName, string lastName, string email)
     {
         // Create claims for the token
         var claims = new[]
         {
             new Claim("action", "login"),
+            new Claim("id", id),
             new Claim("username", username),
             new Claim("firstName", firstName),
             new Claim("lastName", lastName),

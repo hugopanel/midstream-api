@@ -1,4 +1,4 @@
-namespace Contracts;
+namespace Api.Models;
 
 public record AuthenticationResponse(
     Guid Id,

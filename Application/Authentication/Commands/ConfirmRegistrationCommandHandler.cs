@@ -32,7 +32,7 @@ public class ConfirmRegistrationCommandHandler(IUserRepository userRepository, I
         _userRepository.Add(newUser);
 
         // Create JWT Token
-        var token = _jwtTokenGenerator.GenerateLoginToken(newUser.Username, newUser.FirstName,
+        var token = _jwtTokenGenerator.GenerateLoginToken(newUser.Id, newUser.Username, newUser.FirstName,
             newUser.LastName, newUser.Email);
 
         // Return new user

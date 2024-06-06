@@ -9,7 +9,6 @@ using Application.Authentication;
 using Application.Authentication.Commands;
 using Application.Authentication.Queries;
 using Domain.Entities;
-using Contracts;
 using MediatR;
 
 namespace Api.Controllers;
