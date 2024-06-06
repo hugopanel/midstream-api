@@ -24,6 +24,7 @@ public class ConfirmRegistrationCommandHandler(IUserRepository userRepository, I
             FirstName = command.firstName,
             LastName = command.lastName,
             Email = command.email,
+            Salt = new byte[] { 0x3E, 0x4D, 0x6C, 0x2A, 0x72, 0x9F, 0x8B, 0x1C, 0x5D, 0x8E, 0x2B, 0x4F, 0x5E, 0x6A, 0x7C, 0x8D },
             Password = new Password(command.password)
         };
 
@@ -31,7 +32,7 @@ public class ConfirmRegistrationCommandHandler(IUserRepository userRepository, I
         _userRepository.Add(newUser);
 
         // Create JWT Token
-        var token = _jwtTokenGenerator.GenerateRegistrationToken(newUser.Id, newUser.Username, newUser.FirstName,
+        var token = _jwtTokenGenerator.GenerateLoginToken(newUser.Username, newUser.FirstName,
             newUser.LastName, newUser.Email);
 
         // Return new user

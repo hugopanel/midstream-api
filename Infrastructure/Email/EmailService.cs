@@ -13,7 +13,7 @@ public class EmailService : IEmailService
         var fromPassword = "njoewmtozlrhoyzl";
         var subject = "Confirm Your Email";
         var body =
-            $"Click the following link to confirm your email: http://localhost:5101/api/account/confirm?token={token}";
+            $"Click the following link to confirm your email: http://localhost:3000/register_two?token={token}";
 
         var smtp = new SmtpClient
         {

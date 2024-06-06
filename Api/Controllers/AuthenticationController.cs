@@ -28,31 +28,48 @@ public class AuthenticationController : ControllerBase
     [HttpPost("Register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
-        var command = new RegisterQuery(request.Username, request.FirstName, request.LastName, request.Email);
-        AuthenticationResult result = await _mediator.Send(command);
-
-        return Ok("Registration successful. Please check your email to confirm your account.");
+        try
+        {
+            var command = new RegisterQuery(request.Email);
+            AuthenticationResult result = await _mediator.Send(command);
+            var successMessage = new AuthenticationResponseMessage("Registration successful. Please check your email to confirm your account.");
+            return Ok(successMessage);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage(ex.Message);
+            return BadRequest(errorMessage);
+        }
     }
 
-    [Authorize]
     [HttpPost("ConfirmRegistration")]
     public async Task<IActionResult> ConfirmRegistration(ConfirmRequest request)
     {
-        var handler = new JwtSecurityTokenHandler();
-        var jwtSecurityToken = handler.ReadJwtToken(request.Token);
+        try
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(request.Token);
 
-        string username = jwtSecurityToken.Claims.First(claim => claim.Type == "username").Value;
-        string firstName = jwtSecurityToken.Claims.First(claim => claim.Type == "firstName").Value;
-        string lastName = jwtSecurityToken.Claims.First(claim => claim.Type == "lastName").Value;
-        string email = jwtSecurityToken.Claims.First(claim => claim.Type == "email").Value;
+            string username = request.username;
+            string firstName = request.firstname;
+            string lastName = request.lastname;
+            string email = jwtSecurityToken.Claims.First(claim => claim.Type == "email").Value;
 
-        var command = new ConfirmRegistrationCommand(username, firstName, lastName, email, request.Password);
-        AuthenticationResult result = await _mediator.Send(command);
+            var command = new ConfirmRegistrationCommand(username, firstName, lastName, email, request.password);
+            AuthenticationResult result = await _mediator.Send(command);
 
-        var response = new AuthenticationResponse(result.User.Id, result.User.Username, result.User.FirstName,
-            result.User.LastName, result.User.Email, result.Token);
+            Console.WriteLine(result.ToString());
 
-        return Ok(response);
+            var response = new AuthenticationResponse(result.User.Id, result.User.Username, result.User.FirstName,
+                result.User.LastName, result.User.Email, result.Token);
+
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Invalid token");
+            return BadRequest(errorMessage);
+        }
     }
 
     [HttpPost("Login")]

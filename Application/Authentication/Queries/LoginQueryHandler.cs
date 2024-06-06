@@ -20,7 +20,7 @@ public class LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerato
             throw new Exception("Invalid email or password."); // TODO: Create custom exception
 
         // Create JWT Token
-        var token = _jwtTokenGenerator.GenerateLoginToken(user.Id, user.Username, user.FirstName, user.LastName, user.Email);
+        var token = _jwtTokenGenerator.GenerateLoginToken(user.Username, user.FirstName, user.LastName, user.Email);
 
         // Return new user
         return new AuthenticationResult(user, token);
