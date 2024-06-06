@@ -51,7 +51,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         var claims = new[]
         {
             new Claim("action", "login"),
-            new Claim("id", id),
+            new Claim("id", id.ToString()),
             new Claim("username", username),
             new Claim("firstName", firstName),
             new Claim("lastName", lastName),

@@ -70,10 +70,18 @@ public class AuthenticationController : ControllerBase
     [HttpPost("Login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        var query = new LoginQuery(request.Email, request.Password);
-        AuthenticationResult result = await _mediator.Send(query);
+        try
+        {
+            var query = new LoginQuery(request.Email, request.Password);
+            AuthenticationResult result = await _mediator.Send(query);
 
-        return Ok(result);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage(ex.Message);
+            return BadRequest(errorMessage);
+        }
     }
 
     [HttpPost("ResetPassword")]
