@@ -15,9 +15,17 @@ public class LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerato
         // Check if user exists with this username and password combination
         // TODO: Hash the password and use the salt
 
-        var user = _userRepository.GetUserByEmailAndPassword(request.Email, request.Password);
+        var user = _userRepository.GetUserByEmail(request.Email);
         if (user is null)
-            throw new Exception("Invalid email or password."); // TODO: Create custom exception
+        {
+            throw new Exception("Invalid email."); // TODO: Create custom exception
+        }
+            
+        // Check that the password is the same
+        if (!user.VerifyPassword(request.Password))
+        {
+            throw new Exception("Invalid password."); // TODO: Create custom exception
+        }
 
         // Create JWT Token
         var token = _jwtTokenGenerator.GenerateLoginToken(user.Id, user.Username, user.FirstName, user.LastName, user.Email);

@@ -1,36 +1,42 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace Domain.User.ValueObjects;
 
 public class Password
 {
-    private string _hashedPassword;
+    public string HashedPassword { get; private set; }
 
-    public string HashedPassword { get => _hashedPassword; init => _hashedPassword = value; }
-
-    public Password() { }
-
-    public Password(string plaintextValue)
+    public Password(string hashedPassword)
     {
-        _hashedPassword = plaintextValue;
+        HashedPassword = hashedPassword;
     }
 
-    public string Hash(string plaintextValue, out string salt)
+    private Password() // EF Core
     {
-        throw new NotImplementedException();
+
     }
 
-    public string Hash(string plaintextValue, string salt)
+    public static Password FromPlainText(string plainTextPassword)
     {
-        throw new NotImplementedException();
+        var passwordHasher = new PasswordHasher<object>();
+        var hashedPassword = passwordHasher.HashPassword(null!, plainTextPassword);
+        return new Password(hashedPassword);
     }
 
-    public string GenerateSalt()
+    public static Password FromHashed(string hashedPassword)
     {
-        throw new NotImplementedException();
+        return new Password(hashedPassword);
     }
 
-    public bool Verify(string password)
+    public bool Verify(string plainTextPassword)
     {
-        // TODO: Implement hashing if the password isn't hashed when it is passed here.
-        return _hashedPassword == password;
+        var passwordHasher = new PasswordHasher<object>();
+        var result = passwordHasher.VerifyHashedPassword(null!, HashedPassword, plainTextPassword);
+        return result == PasswordVerificationResult.Success;
+    }
+
+    public override string ToString()
+    {
+        return HashedPassword;
     }
 }

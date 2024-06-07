@@ -7,7 +7,7 @@ public interface IUserRepository
     User? GetUserByUsername(string username);
     User? GetUserByEmailAndPassword(string username, string password);
     User? GetUserByEmail(string email);
-    User? GetUserbyId(string id);
+    User? GetUserById(string id);
 
     void Add(User user);
     void Save(User user);
