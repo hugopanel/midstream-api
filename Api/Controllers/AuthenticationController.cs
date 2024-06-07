@@ -104,7 +104,7 @@ public class AuthenticationController : ControllerBase
     [HttpGet("Profile")]
     public IActionResult Profile()
     {
-        var username = User.Identity.Name;
+        var username = User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
 
         return Ok(new { Username = username });
     }

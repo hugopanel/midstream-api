@@ -19,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
             Name = "Authorization",
             In = Microsoft.OpenApi.Models.ParameterLocation.Header,
             Description = "JWT Bearer Token",
-            // Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+            Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
             BearerFormat = "JWT",
             Scheme = "bearer"
         });
