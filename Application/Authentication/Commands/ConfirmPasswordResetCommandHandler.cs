@@ -23,6 +23,8 @@ public class ConfirmPasswordResetCommandHandler : IRequestHandler<ConfirmPasswor
         // Change the password of the user
         user.ChangePassword(request.NewPassword);
 
+        _userRepository.Save(user);
+
         return Unit.Value; // Return Unit 
     }
 }
