@@ -4,6 +4,7 @@ using Application.Common.Interfaces.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
 using Domain.User;
+using Domain.User.ValueObjects;
 using Infrastructure.Data;
 
 namespace Infrastructure.Repositories
@@ -17,25 +18,23 @@ namespace Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        // public async Task<User> GetUserByUsernameAsync(string username)
-        // {
-        //     return await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
-        // }
-        //
-        // public async Task RegisterUserAsync(User user)
-        // {
-        //     _context.Users.Add(user);
-        //     await _context.SaveChangesAsync();
-        // }
-
         public User? GetUserByUsername(string username)
         {
             return _dbContext.Users.SingleOrDefault(u => u.Username == username);
         }
 
-        public User? GetUserByUsernameAndPassword(string username, string password)
+        public User? GetUserByEmailAndPassword(string email, string password)
         {
-            return _dbContext.Users.SingleOrDefault(u => u.Username == username && u.Password.Verify(password));
+            var user = _dbContext.Users
+            .Include(u => u.Password)
+            .SingleOrDefault(u => u.Email == email);
+
+            if (user != null && user.Password.Verify(password))
+            {
+                return user;
+            }
+
+            return null;
         }
 
         public User? GetUserByEmail(string email)
@@ -43,7 +42,7 @@ namespace Infrastructure.Repositories
             return _dbContext.Users.SingleOrDefault(u => u.Email == email);
         }
 
-        public User? GetUserbyId(string id)
+        public User? GetUserById(string id)
         {
             return _dbContext.Users.SingleOrDefault(u => u.Id.ToString() == id);
         }

@@ -24,14 +24,14 @@ public class ConfirmRegistrationCommandHandler(IUserRepository userRepository, I
             FirstName = command.firstName,
             LastName = command.lastName,
             Email = command.email,
-            Password = new Password(command.password)
+            Password = Password.FromPlainText(command.password)
         };
 
         // Add new user
         _userRepository.Add(newUser);
-        
+
         // Create JWT Token
-        var token = _jwtTokenGenerator.GenerateRegistrationToken(newUser.Id, newUser.Username, newUser.FirstName, 
+        var token = _jwtTokenGenerator.GenerateLoginToken(newUser.Id, newUser.Username, newUser.FirstName,
             newUser.LastName, newUser.Email);
 
         // Return new user

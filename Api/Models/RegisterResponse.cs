@@ -1,4 +1,7 @@
-public class RegisterResponse
+namespace Api.Models
 {
-    public string message { get; set; }
+    public class RegisterResponse
+    {
+        public string message { get; set; }
+    }
 }

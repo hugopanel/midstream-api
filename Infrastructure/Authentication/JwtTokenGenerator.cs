@@ -21,7 +21,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         var signingCredentials =
             new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),
                 SecurityAlgorithms.HmacSha256);
-        
+
         // Generate the token
         var token = new JwtSecurityToken(
             issuer: _jwtSettings.Issuer,
@@ -29,22 +29,19 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             expires: DateTime.UtcNow.AddHours(1),
             claims: claims,
             signingCredentials: signingCredentials);
-        
+
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public string GenerateRegistrationToken(Guid id, string username, string firstName, string lastName, string email)
+    public string GenerateRegistrationToken(string email)
     {
         // Create claims for the token
         var claims = new[]
         {
             new Claim("action", "register"),
-            new Claim("username", username),
-            new Claim("firstName", firstName),
-            new Claim("lastName", lastName),
             new Claim("email", email)
         };
-        
+
         return GenerateGenericStringTokenWithClaims(claims);
     }
 
@@ -54,12 +51,13 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         var claims = new[]
         {
             new Claim("action", "login"),
+            new Claim("id", id.ToString()),
             new Claim("username", username),
             new Claim("firstName", firstName),
             new Claim("lastName", lastName),
             new Claim("email", email)
         };
-        
+
         return GenerateGenericStringTokenWithClaims(claims);
     }
 
@@ -71,7 +69,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new Claim("action", "resetPassword"),
             new Claim("userid", id.ToString())
         };
-        
+
         return GenerateGenericStringTokenWithClaims(claims);
     }
 }

@@ -24,25 +24,20 @@ public class RegisterQueryHandler : IRequestHandler<RegisterQuery, Authenticatio
     public async Task<AuthenticationResult> Handle(RegisterQuery query, CancellationToken cancellationToken)
     {
         // Check if user with given name already exists
-        if (_userRepository.GetUserByUsername(query.Username) is not null)
+        if (_userRepository.GetUserByEmail(query.Email) is not null)
             throw new Exception("User already exists."); // TODO: Create custom exception
 
         User newUser = new User
         {
-            Id = Guid.NewGuid(),
-            Username = query.Username,
-            FirstName = query.FirstName,
-            LastName = query.LastName,
             Email = query.Email
         };
-        
+
         // Create JWT Token
-        var token = _jwtTokenGenerator.GenerateRegistrationToken(newUser.Id, newUser.Username, newUser.FirstName, 
-            newUser.LastName, newUser.Email);
-        
+        var token = _jwtTokenGenerator.GenerateRegistrationToken(query.Email);
+
         // Send confirmation email
-        await _emailService.SendConfirmationEmailAsync(newUser.Email, token);
-        
+        await _emailService.SendConfirmationEmailAsync(query.Email, token);
+
         // Return new user
         return new AuthenticationResult(newUser, token);
     }

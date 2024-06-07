@@ -21,7 +21,7 @@ namespace Infrastructure
             ConfigurationManager configuration)
         {
             services.AddAuth(configuration);
-            
+
             services.AddDbContext<UserDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
@@ -38,7 +38,7 @@ namespace Infrastructure
 
             services.AddSingleton(Options.Create(jwtSettings));
             services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-            
+
             services.AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters()
                 {
@@ -50,7 +50,7 @@ namespace Infrastructure
                     ValidAudience = jwtSettings.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
                 });
-        
+
             return services;
         }
     }

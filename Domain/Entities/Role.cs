@@ -7,12 +7,13 @@ namespace Domain.Entities
         public List<Permission> Permissions { get; set; }
         public Project Project { get; set; }
 
+        /*
         public Role(string name, List<Permission> permissions, Project project)
         {
             Id = Guid.NewGuid();
             Name = name;
             Permissions = permissions;
             Project = project;
-        }
+        }*/
     }
 }
