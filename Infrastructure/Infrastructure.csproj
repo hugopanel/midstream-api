@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<ItemGroup>
-		<ProjectReference Include="..\Application\Application.csproj"/>
+		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\Domain\Domain.csproj" />
 	</ItemGroup>
 
@@ -11,6 +11,10 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.11" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Repositories\" />
 	</ItemGroup>
 
     <PropertyGroup>
