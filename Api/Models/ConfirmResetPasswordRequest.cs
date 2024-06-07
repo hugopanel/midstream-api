@@ -1,3 +1,3 @@
 namespace Api.Models;
 
-public record ConfirmResetPasswordRequest(string Token, string NewPassword);
+public record ConfirmResetPasswordRequest(string password);

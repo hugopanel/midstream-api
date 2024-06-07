@@ -104,19 +104,28 @@ public class AuthenticationController : ControllerBase
         }
     }
 
-    [Authorize]
     [HttpPost("ConfirmResetPassword")]
-    public async Task<IActionResult> ConfirmResetPassword(ConfirmResetPasswordRequest request)
+    public async Task<IActionResult> ConfirmResetPassword([FromQuery] string token, [FromBody] ConfirmResetPasswordRequest request)
     {
-        var handler = new JwtSecurityTokenHandler();
-        var jwtSecurityToken = handler.ReadJwtToken(request.Token);
+        try
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(token);
 
-        string id = jwtSecurityToken.Claims.First(claim => claim.Type == "userid").Value;
+            string id = jwtSecurityToken.Claims.First(claim => claim.Type == "userid").Value;
 
-        var command = new ConfirmPasswordResetCommand(id, request.NewPassword);
-        await _mediator.Send(command);
+            var command = new ConfirmPasswordResetCommand(id, request.password);
+            await _mediator.Send(command);
 
-        return Ok("New password set successfully. Please login with your new password.");
+            var message = new AuthenticationResponseMessage("New password set successfully. Please login with your new password.");
+
+            return Ok(message);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the reset of the password.");
+            return BadRequest(errorMessage);
+        }
     }
 
     [Authorize]
