@@ -25,6 +25,9 @@ namespace Domain.User
 
         public void ChangePassword(Password newPassword) => _password = newPassword;
         public void ChangePassword(string newPlainTextPassword) => _password = Password.FromPlainText(newPlainTextPassword);
+        public void ChangeUsername(string newUsername) => _username = newUsername;
+        public void ChangeFirstName(string newFirstName) => _firstName = newFirstName;
+        public void ChangeLastName(string newLastName) => _lastName = newLastName;
         public bool VerifyPassword(string plainTextPassword) => _password.Verify(plainTextPassword);
     }
 }

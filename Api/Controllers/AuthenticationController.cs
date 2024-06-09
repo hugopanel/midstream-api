@@ -132,8 +132,57 @@ public class AuthenticationController : ControllerBase
     [HttpGet("Profile")]
     public IActionResult Profile()
     {
-        var username = User.Identity.Name;
+        var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+        var Username = User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
+        var FirstName = User.Claims.FirstOrDefault(c => c.Type == "firstName")?.Value;
+        var LastName = User.Claims.FirstOrDefault(c => c.Type == "lastName")?.Value;
+        var Email = User.Claims.FirstOrDefault(c => c.Type == "emailAddress")?.Value;
 
-        return Ok(new { Username = username });
+        var result = new ProfileResponse(Id, Username, FirstName, LastName, Email); 
+
+        return Ok(result);
     }
+
+    [HttpPost("UpdateInfo")]
+    public async Task<IActionResult> UpdateInfo(UpdateInfoRequest request)
+    {
+        try
+        {
+            var command = new UpdateInfoCommand(request.id, request.username, request.firstname, request.lastname);
+            AuthenticationResult result =  await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the uopdate of the information.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    /*
+    [Authorize]
+    [HttpPost("UpdatePassword")]
+    public async Task<IActionResult> UpdatePassword(UpdatePasswordRequest request)
+    {
+        try
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(token);
+
+            string id = jwtSecurityToken.Claims.First(claim => claim.Type == "userid").Value;
+
+            var command = new ConfirmPasswordResetCommand(id, request.CUrrentPassword);
+            await _mediator.Send(command);
+
+            var message = new AuthenticationResponseMessage("New password set successfully. Please login with your new password.");
+
+            return Ok(message);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the reset of the password.");
+            return BadRequest(errorMessage);
+        }
+    }*/
 }

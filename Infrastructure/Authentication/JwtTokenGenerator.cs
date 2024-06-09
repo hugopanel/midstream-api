@@ -55,7 +55,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new Claim("username", username),
             new Claim("firstName", firstName),
             new Claim("lastName", lastName),
-            new Claim("email", email)
+            new Claim("emailAddress", email)
         };
 
         return GenerateGenericStringTokenWithClaims(claims);
