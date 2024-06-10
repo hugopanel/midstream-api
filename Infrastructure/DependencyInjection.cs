@@ -12,6 +12,7 @@ using Infrastructure.Email;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Driver;
 
 namespace Infrastructure
 {
@@ -23,11 +24,27 @@ namespace Infrastructure
             services.AddAuth(configuration);
 
             services.AddDbContext<UserDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(configuration.GetConnectionString("postgres")));
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IEmailService, EmailService>();
 
+
+            // Configuration MongoDB
+            var mongoDbSettings = new MongoDbSettings();
+            configuration.GetSection("MongoDB").Bind(mongoDbSettings);
+
+            services.AddSingleton<IMongoClient, MongoClient>(sp =>
+            {
+                return new MongoClient(mongoDbSettings.ConnectionString);
+            });
+
+            services.AddSingleton(sp =>
+            {
+                var client = sp.GetRequiredService<IMongoClient>();
+                return client.GetDatabase(mongoDbSettings.DatabaseName);
+            });
+            
             return services;
         }
 
