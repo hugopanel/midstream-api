@@ -45,7 +45,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         return GenerateGenericStringTokenWithClaims(claims);
     }
 
-    public string GenerateLoginToken(Guid id, string username, string firstName, string lastName, string email)
+    public string GenerateLoginToken(Guid id, string username, string firstName, string lastName, string email, string avatar, string colour)
     {
         // Create claims for the token
         var claims = new[]
@@ -55,7 +55,9 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new Claim("username", username),
             new Claim("firstName", firstName),
             new Claim("lastName", lastName),
-            new Claim("emailAddress", email)
+            new Claim("emailAddress", email),
+            new Claim("avatar", avatar),
+            new Claim("colour", colour)
         };
 
         return GenerateGenericStringTokenWithClaims(claims);

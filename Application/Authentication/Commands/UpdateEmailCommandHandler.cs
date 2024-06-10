@@ -37,7 +37,7 @@ public class UpdateEmailCommandHandler : IRequestHandler<UpdateEmailCommand, Aut
 
         // Create JWT Token
         var token = _jwtTokenGenerator.GenerateLoginToken(user.Id, user.Username, user.FirstName,
-            user.LastName, user.Email);
+            user.LastName, user.Email, user.Avatar, user.Colour);
 
         // Return updated user and token
         return new AuthenticationResult(user, token);

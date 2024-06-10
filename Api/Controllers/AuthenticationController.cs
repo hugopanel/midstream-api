@@ -135,8 +135,10 @@ public class AuthenticationController : ControllerBase
         var FirstName = User.Claims.FirstOrDefault(c => c.Type == "firstName")?.Value;
         var LastName = User.Claims.FirstOrDefault(c => c.Type == "lastName")?.Value;
         var Email = User.Claims.FirstOrDefault(c => c.Type == "emailAddress")?.Value;
+        var Avatar = User.Claims.FirstOrDefault(c => c.Type == "avatar")?.Value;
+        var Colour = User.Claims.FirstOrDefault(c => c.Type == "colour")?.Value;
 
-        var result = new ProfileResponse(Id, Username, FirstName, LastName, Email); 
+        var result = new ProfileResponse(Id, Username, FirstName, LastName, Email, Avatar, Colour);
 
         return Ok(result);
     }
@@ -200,6 +202,26 @@ public class AuthenticationController : ControllerBase
         catch (Exception ex)
         {
             var errorMessage = new AuthenticationResponseMessage("Error during the update of the password.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [Authorize]
+    [HttpPost("UpdateAvatar")]
+    public async Task<IActionResult> UpdatePassword(UpdateAvatarRequest request)
+    {
+        try
+        {
+            var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+
+            var command = new UpdateAvatarCommand(Id.ToString(), request.Avatar, request.Colour);
+            AuthenticationResult result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the update of the avatar.");
             return BadRequest(errorMessage);
         }
     }

@@ -5,5 +5,7 @@ public record ProfileResponse(
     string Username,
     string FirstName,
     string LastName,
-    string Email
+    string Email,
+    string Avatar,
+    string Colour
 );

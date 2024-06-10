@@ -24,7 +24,9 @@ public class ConfirmRegistrationCommandHandler(IUserRepository userRepository, I
             FirstName = command.firstName,
             LastName = command.lastName,
             Email = command.email,
-            Password = Password.FromPlainText(command.password)
+            Password = Password.FromPlainText(command.password),
+            Avatar = "1",
+            Colour = "#000000"
         };
 
         // Add new user
@@ -32,7 +34,7 @@ public class ConfirmRegistrationCommandHandler(IUserRepository userRepository, I
 
         // Create JWT Token
         var token = _jwtTokenGenerator.GenerateLoginToken(newUser.Id, newUser.Username, newUser.FirstName,
-            newUser.LastName, newUser.Email);
+            newUser.LastName, newUser.Email, newUser.Avatar, newUser.Colour);
 
         // Return new user
         return new AuthenticationResult(newUser, token);

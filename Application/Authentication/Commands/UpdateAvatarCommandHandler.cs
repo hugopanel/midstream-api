@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace Application.Authentication.Commands;
 
-public class UpdateInfoCommandHandler : IRequestHandler<UpdateInfoCommand, AuthenticationResult>
+public class UpdateAvatarCommandHandler : IRequestHandler<UpdateAvatarCommand, AuthenticationResult>
 {
     private readonly IUserRepository _userRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
 
-    public UpdateInfoCommandHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
+    public UpdateAvatarCommandHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
     {
         _userRepository = userRepository;
         _jwtTokenGenerator = jwtTokenGenerator;
     }
 
-    public async Task<AuthenticationResult> Handle(UpdateInfoCommand command, CancellationToken cancellationToken)
+    public async Task<AuthenticationResult> Handle(UpdateAvatarCommand command, CancellationToken cancellationToken)
     {
         User? user = _userRepository.GetUserById(command.id);
 
@@ -30,12 +30,8 @@ public class UpdateInfoCommandHandler : IRequestHandler<UpdateInfoCommand, Authe
             throw new Exception("User not found");
         }
 
-        // Update user information
-        user.ChangeUsername(command.username);
-        user.ChangeFirstName(command.firstName);
-        user.ChangeLastName(command.lastName);
-
-        _userRepository.Save(user);
+        user.ChangeAvatar(command.Avatar);
+        user.ChangeColour(command.Colour);
 
         // Create JWT Token
         var token = _jwtTokenGenerator.GenerateLoginToken(user.Id, user.Username, user.FirstName,
