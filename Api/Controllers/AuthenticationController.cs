@@ -143,12 +143,15 @@ public class AuthenticationController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
     [HttpPost("UpdateInfo")]
     public async Task<IActionResult> UpdateInfo(UpdateInfoRequest request)
     {
         try
         {
-            var command = new UpdateInfoCommand(request.id, request.username, request.firstname, request.lastname);
+            var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+
+            var command = new UpdateInfoCommand(Id.ToString(), request.username, request.firstname, request.lastname);
             AuthenticationResult result =  await _mediator.Send(command);
 
             return Ok(result);
@@ -156,6 +159,26 @@ public class AuthenticationController : ControllerBase
         catch (Exception ex)
         {
             var errorMessage = new AuthenticationResponseMessage("Error during the uopdate of the information.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [Authorize]
+    [HttpPost("UpdateEmail")]
+    public async Task<IActionResult> UpdateEmail(UpdateEmailRequest request)
+    {
+        try
+        {
+                        var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+
+            var command = new UpdateEmailCommand(Id.ToString(), request.email);
+            AuthenticationResult result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the update of the information.");
             return BadRequest(errorMessage);
         }
     }
@@ -172,7 +195,7 @@ public class AuthenticationController : ControllerBase
 
             string id = jwtSecurityToken.Claims.First(claim => claim.Type == "userid").Value;
 
-            var command = new ConfirmPasswordResetCommand(id, request.CUrrentPassword);
+            var command = new UpdatePasswordResetCommand(id, request.CurrentPassword);
             await _mediator.Send(command);
 
             var message = new AuthenticationResponseMessage("New password set successfully. Please login with your new password.");
