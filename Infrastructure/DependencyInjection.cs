@@ -31,19 +31,20 @@ namespace Infrastructure
 
 
             // Configuration MongoDB
-            var mongoDbSettings = new MongoDbSettings();
-            configuration.GetSection("MongoDB").Bind(mongoDbSettings);
+            // var mongoDbSettings = new MongoDbSettings();
+            // configuration.GetSection("MongoDB").Bind(mongoDbSettings);
 
-            services.AddSingleton<IMongoClient, MongoClient>(sp =>
-            {
-                return new MongoClient(mongoDbSettings.ConnectionString);
-            });
+            // services.AddSingleton<IMongoClient, MongoClient>(sp =>
+            // {
+            //     return new MongoClient(mongoDbSettings.ConnectionString);
+            // });
 
-            services.AddSingleton(sp =>
-            {
-                var client = sp.GetRequiredService<IMongoClient>();
-                return client.GetDatabase(mongoDbSettings.DatabaseName);
-            });
+            // services.AddSingleton(sp =>
+            // {
+            //     var client = sp.GetRequiredService<IMongoClient>();
+            //     return client.GetDatabase(mongoDbSettings.DatabaseName);
+            // });
+            // services.AddScoped<IFileRepository, FileRepository>();
             
             return services;
         }

@@ -20,9 +20,8 @@ public class FilesController : ControllerBase
     {
         _mediator = mediator;
     }
-    [Authorize]
     [HttpGet("GetAll")]
-    public async Task<IActionResult> GetAllFiles(GetAllFilesRequest request)
+    public async Task<IActionResult> GetAllFiles()
     {
         try
         {

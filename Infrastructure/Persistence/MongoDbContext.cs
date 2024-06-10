@@ -22,9 +22,9 @@ public class MongoDbContext: DbContext
             entity.Property(e => e.Name).IsRequired();
             entity.Property(e => e.Type).IsRequired();
             entity.Property(e => e.Size).IsRequired();
-            entity.Property(e => e.CreatedDate).IsRequired();
-            entity.Property(e => e.ModifiedDate).IsRequired();
-            entity.Property(e => e.uploadedBy).IsRequired();
+            entity.Property(e => e.Created_date).IsRequired();
+            entity.Property(e => e.Modified_date).IsRequired();
+            entity.Property(e => e.Uploaded_by).IsRequired();
         });
     }
 }
