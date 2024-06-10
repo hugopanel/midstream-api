@@ -33,7 +33,7 @@ public class UpdatePasswordCommandHandler : IRequestHandler<UpdatePasswordComman
         if (user.VerifyPassword(command.CurrentPassword))
         {
             // Update user Password
-            user.ChangeUsername(command.NewPassword);
+            user.ChangePassword(command.NewPassword);
 
             _userRepository.Save(user);
         }
