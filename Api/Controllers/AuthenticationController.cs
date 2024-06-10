@@ -28,8 +28,8 @@ public class AuthenticationController : ControllerBase
         try
         {
             var command = new RegisterQuery(request.Email);
-            AuthenticationResult result = await _mediator.Send(command);
-            return Ok(result);
+            await _mediator.Send(command);
+            return Ok(new AuthenticationResponseMessage("Please check your emails to confirm your registration."));
         }
         catch (Exception ex)
         {
@@ -117,9 +117,7 @@ public class AuthenticationController : ControllerBase
             var command = new ConfirmPasswordResetCommand(id, request.password);
             await _mediator.Send(command);
 
-            var message = new AuthenticationResponseMessage("New password set successfully. Please login with your new password.");
-
-            return Ok(message);
+            return Ok(new AuthenticationResponseMessage("New password set successfully. Please login with your new password."));
         }
         catch (Exception ex)
         {
