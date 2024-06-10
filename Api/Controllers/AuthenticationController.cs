@@ -169,7 +169,7 @@ public class AuthenticationController : ControllerBase
     {
         try
         {
-                        var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+            var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
 
             var command = new UpdateEmailCommand(Id.ToString(), request.email);
             AuthenticationResult result = await _mediator.Send(command);
@@ -183,29 +183,26 @@ public class AuthenticationController : ControllerBase
         }
     }
 
-    /*
+    
     [Authorize]
     [HttpPost("UpdatePassword")]
     public async Task<IActionResult> UpdatePassword(UpdatePasswordRequest request)
     {
         try
         {
-            var handler = new JwtSecurityTokenHandler();
-            var jwtSecurityToken = handler.ReadJwtToken(token);
+            var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
 
-            string id = jwtSecurityToken.Claims.First(claim => claim.Type == "userid").Value;
-
-            var command = new UpdatePasswordResetCommand(id, request.CurrentPassword);
+            var command = new UpdatePasswordCommand(Id.ToString(), request.CurrentPassword, request.NewPassword);
             await _mediator.Send(command);
 
-            var message = new AuthenticationResponseMessage("New password set successfully. Please login with your new password.");
+            var message = new AuthenticationResponseMessage("Password updated successfully.");
 
             return Ok(message);
         }
         catch (Exception ex)
         {
-            var errorMessage = new AuthenticationResponseMessage("Error during the reset of the password.");
+            var errorMessage = new AuthenticationResponseMessage("Error during the update of the password.");
             return BadRequest(errorMessage);
         }
-    }*/
+    }
 }
