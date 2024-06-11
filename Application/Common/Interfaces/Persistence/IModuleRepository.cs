@@ -1,8 +1,7 @@
 ﻿using Domain.Entities;
 namespace Application.Common.Interfaces.Persistence;
 
-public interface IFileRepository
+public interface IModuleRepository
 {
-    List<FileApp>? GetAllFiles();
-
+    List<Module>? GetAllModules();
 }

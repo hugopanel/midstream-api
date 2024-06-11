@@ -7,17 +7,17 @@ using MediatR;
 
 namespace Application.Files.Queries;
 
-public class GetAllFilesQueryHandler(/*IFileRepository fileRepository*/)
+public class GetAllFilesQueryHandler(IFileRepository fileRepository)
     :IRequestHandler<GetAllFilesQuery, GetFilesResult>
 {
-    private IFileRepository _fileRepository;
+    private IFileRepository _fileRepository = fileRepository;
 
     public async Task<GetFilesResult> Handle(GetAllFilesQuery request, CancellationToken cancellationToken)
     {
-        // var files = _fileRepository.GetAllFiles();
+        var files = _fileRepository.GetAllFiles();
+        // trier du plus récent au plus ancien
+        files.Sort((a, b) => b.Modified_date.CompareTo(a.Modified_date));
 
-        // charger le fichier files.json dans la variable files "../Application/Files/Queries/files.json"
-        var files = JsonSerializer.Deserialize<List<FileApp>>(File.ReadAllText("../Application/Files/Queries/files.json"));
         
         return new GetFilesResult(files);
     }

@@ -1,0 +1,58 @@
+[
+    {
+        "Id": 1,
+        "Name": "DA Space - Artistic Direction",
+        "Description": "A module that will help you organize the different aspects of the artistic direction and visual identity of your company. You can store your color palettes, logos, typographies, and other essential visual elements there.",
+        "Tags": ["Design"],
+        "Checked": true
+    },
+    {
+        "Id": 2,
+        "Name": "Budget Monitoring and Accounting",
+        "Description": "A module to track expenses, allocated budgets, and actual project costs. It also allows you to generate financial reports and track invoices and payments.",
+        "Tags": ["Finance", "Management"],
+        "Checked": false
+    },
+    {
+        "Id": 3,
+        "Name": "Risk management",
+        "Description": "This module helps identify, assess and monitor potential risks associated with a project. It allows you to create mitigation plans and manage incidents when they occur.",
+        "Tags": ["Risk", "Management"],
+        "Checked": false
+    },
+    {
+        "Id": 4,
+        "Name": "Performance Analysis and Reporting",
+        "Description": "A module that provides analysis tools to measure project effectiveness, generate detailed performance reports, and identify areas for improvement.",
+        "Tags": ["Performance", "Finance"],
+        "Checked": true
+    },
+    {
+        "Id": 5,
+        "Name": "Github integration",
+        "Description": "This module allows for seamless integration between Midstream and GitHub, making it easier to manage software development projects.",
+        "Tags": ["Management", "Integration"],
+        "Checked": false
+    },
+    {
+        "Id": 6,
+        "Name": "Creating Diagrams",
+        "Description": "This module provides powerful tools for creating, editing and managing various types of diagrams essential for project planning and documentation. Gantt charts, UML charts, BI charts, etc.",
+        "Tags": ["Design", "Integration"],
+        "Checked": false
+    },
+    {
+        "Id": 7,
+        "Name": "Progress Tracking and Gamification",
+        "Description": "A module that motivates teams by integrating gamification elements such as rewards for completed tasks, leader boards, and badges for achievements.",
+        "Tags": ["Management", "Performance"],
+        "Checked": false
+    },
+    {
+        "Id": 8,
+        "Name": "Strategic planning",
+        "Description": "This module helps align projects with the company's strategic objectives, define KPIs, and monitor progress towards achieving these objectives.",
+        "Tags": ["Performance", "Risk"],
+        "Checked": false
+    }
+]

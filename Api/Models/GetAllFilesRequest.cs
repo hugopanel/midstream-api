@@ -1,4 +1,3 @@
-﻿using Domain.Entities;
-namespace Api.Models;
+﻿namespace Api.Models;
 
 public record GetAllFilesRequest();

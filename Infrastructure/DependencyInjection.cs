@@ -30,6 +30,14 @@ namespace Infrastructure
             services.AddScoped<IEmailService, EmailService>();
 
 
+
+
+            services.AddScoped<IFileRepository, FileRepository>();
+            services.AddScoped<IModuleRepository, ModuleRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+
+
+
             // Configuration MongoDB
             // var mongoDbSettings = new MongoDbSettings();
             // configuration.GetSection("MongoDB").Bind(mongoDbSettings);

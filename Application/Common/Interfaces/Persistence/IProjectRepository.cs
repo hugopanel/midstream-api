@@ -1,8 +1,7 @@
 ﻿using Domain.Entities;
 namespace Application.Common.Interfaces.Persistence;
 
-public interface IFileRepository
+public interface IProjectRepository
 {
-    List<FileApp>? GetAllFiles();
-
+    List<Project>? GetAllProjects();
 }
