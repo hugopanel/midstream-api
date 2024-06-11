@@ -33,6 +33,8 @@ public class UpdateAvatarCommandHandler : IRequestHandler<UpdateAvatarCommand, A
         user.ChangeAvatar(command.Avatar);
         user.ChangeColour(command.Colour);
 
+        _userRepository.Save(user);
+
         // Create JWT Token
         var token = _jwtTokenGenerator.GenerateLoginToken(user.Id, user.Username, user.FirstName,
             user.LastName, user.Email, user.Avatar, user.Colour);
