@@ -28,7 +28,7 @@ public class LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerato
         }
 
         // Create JWT Token
-        var token = _jwtTokenGenerator.GenerateLoginToken(user.Id, user.Username, user.FirstName, user.LastName, user.Email);
+        var token = _jwtTokenGenerator.GenerateLoginToken(user.Id, user.Username, user.FirstName, user.LastName, user.Email, user.Avatar, user.Colour);
 
         // Return new user
         return new AuthenticationResult(user, token);

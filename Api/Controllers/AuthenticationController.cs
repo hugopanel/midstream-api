@@ -28,8 +28,8 @@ public class AuthenticationController : ControllerBase
         try
         {
             var command = new RegisterQuery(request.Email);
-            AuthenticationResult result = await _mediator.Send(command);
-            return Ok(result);
+            await _mediator.Send(command);
+            return Ok(new AuthenticationResponseMessage("Please check your emails to confirm your registration."));
         }
         catch (Exception ex)
         {
@@ -117,9 +117,7 @@ public class AuthenticationController : ControllerBase
             var command = new ConfirmPasswordResetCommand(id, request.password);
             await _mediator.Send(command);
 
-            var message = new AuthenticationResponseMessage("New password set successfully. Please login with your new password.");
-
-            return Ok(message);
+            return Ok(new AuthenticationResponseMessage("New password set successfully. Please login with your new password."));
         }
         catch (Exception ex)
         {
@@ -132,8 +130,99 @@ public class AuthenticationController : ControllerBase
     [HttpGet("Profile")]
     public IActionResult Profile()
     {
-        var username = User.Identity.Name;
+        var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+        var Username = User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
+        var FirstName = User.Claims.FirstOrDefault(c => c.Type == "firstName")?.Value;
+        var LastName = User.Claims.FirstOrDefault(c => c.Type == "lastName")?.Value;
+        var Email = User.Claims.FirstOrDefault(c => c.Type == "emailAddress")?.Value;
+        var Avatar = User.Claims.FirstOrDefault(c => c.Type == "avatar")?.Value;
+        var Colour = User.Claims.FirstOrDefault(c => c.Type == "colour")?.Value;
 
-        return Ok(new { Username = username });
+        var result = new ProfileResponse(Id, Username, FirstName, LastName, Email, Avatar, Colour);
+
+        return Ok(result);
+    }
+
+    [Authorize]
+    [HttpPost("UpdateInfo")]
+    public async Task<IActionResult> UpdateInfo(UpdateInfoRequest request)
+    {
+        try
+        {
+            var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+
+            var command = new UpdateInfoCommand(Id.ToString(), request.username, request.firstname, request.lastname);
+            AuthenticationResult result =  await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the uopdate of the information.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [Authorize]
+    [HttpPost("UpdateEmail")]
+    public async Task<IActionResult> UpdateEmail(UpdateEmailRequest request)
+    {
+        try
+        {
+            var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+
+            var command = new UpdateEmailCommand(Id.ToString(), request.email);
+            AuthenticationResult result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the update of the information.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    
+    [Authorize]
+    [HttpPost("UpdatePassword")]
+    public async Task<IActionResult> UpdatePassword(UpdatePasswordRequest request)
+    {
+        try
+        {
+            var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+
+            var command = new UpdatePasswordCommand(Id.ToString(), request.CurrentPassword, request.NewPassword);
+            await _mediator.Send(command);
+
+            var message = new AuthenticationResponseMessage("Password updated successfully.");
+
+            return Ok(message);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the update of the password.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [Authorize]
+    [HttpPost("UpdateAvatar")]
+    public async Task<IActionResult> UpdatePassword(UpdateAvatarRequest request)
+    {
+        try
+        {
+            var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+
+            var command = new UpdateAvatarCommand(Id.ToString(), request.Avatar, request.Colour);
+            AuthenticationResult result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the update of the avatar.");
+            return BadRequest(errorMessage);
+        }
     }
 }
