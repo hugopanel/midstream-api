@@ -89,4 +89,26 @@ public class TeamController : ControllerBase
         }
     }
 
+    [HttpPost("CreateMember")]
+    public async Task<IActionResult> CreateMember(CreateMemberRequest request)
+    {
+        try
+        {
+            var memberCommand = new CreateMemberCommand(request.UserId, request.TeamId.ToString());
+            MemberResult memberResult = await _mediator.Send(memberCommand);
+            for (int i = 0; i < request.RolesId.Count; i++)
+            {
+                var roleCommand = new CreateMemberRoleCommand(memberResult.Member.Id.ToString(), request.RolesId[i]);
+                MemberRoleResult roleResult = await _mediator.Send(roleCommand);
+            }
+
+            return Ok(memberResult);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the creation of the project.");
+            return BadRequest(errorMessage);
+        }
+    }
+
 }
