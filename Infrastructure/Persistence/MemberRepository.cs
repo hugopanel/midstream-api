@@ -21,6 +21,16 @@ namespace Infrastructure.Repositories
             return _dbContext.Members.SingleOrDefault(t => t.Id.ToString() == id);
         }
 
+        public List<Member> GetMembers()
+        {
+            return _dbContext.Members.ToList();
+        }
+
+        public List<Member> GetMembersByTeamId(string teamId)
+        {
+            return _dbContext.Members.Where(m => m.TeamId.ToString() == teamId).ToList();
+        }
+
         public void Add(Member member)
         {
             _dbContext.Members.Add(member);

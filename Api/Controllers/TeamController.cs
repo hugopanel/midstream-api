@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Api.Models;
 using Application.Teams;
 using Application.Teams.Commands;
+using Application.Teams.Queries;
 using Domain.Entities;
 using MediatR;
 using System.Linq.Expressions;
@@ -94,7 +95,7 @@ public class TeamController : ControllerBase
     {
         try
         {
-            var memberCommand = new CreateMemberCommand(request.UserId, request.TeamId.ToString());
+            var memberCommand = new CreateMemberCommand(request.UserId, request.TeamId);
             MemberResult memberResult = await _mediator.Send(memberCommand);
             for (int i = 0; i < request.RolesId.Count; i++)
             {
@@ -111,4 +112,37 @@ public class TeamController : ControllerBase
         }
     }
 
+    [HttpPost("CreateMemberRole")]
+    public async Task<IActionResult> CreateMemberRole(CreateMemberRoleRequest request)
+    {
+        try
+        {
+            var roleCommand = new CreateMemberRoleCommand(request.MemberId, request.RoleId);
+            MemberRoleResult result = await _mediator.Send(roleCommand);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the creation of the project.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [HttpGet("GetMembersByTeam")]
+    public async Task<IActionResult> GetMembersByTeam(string teamId)
+    {
+        try
+        {
+            var query = new GetMembersByTeamQuery(teamId);
+            ListMembersResult result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the members.");
+            return BadRequest(errorMessage);
+        }
+    }
 }

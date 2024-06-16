@@ -4,6 +4,8 @@ namespace Application.Common.Interfaces.Persistence;
 
 public interface IUserRepository
 {
+    List<User> GetUsers();
+
     User? GetUserByUsername(string username);
     User? GetUserByEmailAndPassword(string username, string password);
     User? GetUserByEmail(string email);

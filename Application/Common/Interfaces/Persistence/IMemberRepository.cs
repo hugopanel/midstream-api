@@ -4,6 +4,9 @@ namespace Application.Common.Interfaces.Persistence;
 
 public interface IMemberRepository
 {
+    List<Member> GetMembers();
+    List<Member> GetMembersByTeamId(string teamId);
+
     Member? GetMemberById(string id);
 
     void Add(Member member);

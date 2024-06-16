@@ -18,6 +18,11 @@ namespace Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
+        public List<User> GetUsers()
+        {
+            return _dbContext.Users.ToList();
+        }
+
         public User? GetUserByUsername(string username)
         {
             return _dbContext.Users.SingleOrDefault(u => u.Username == username);
