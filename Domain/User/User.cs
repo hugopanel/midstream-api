@@ -12,7 +12,7 @@ namespace Domain.User
         private string _lastName;
         private Password _password;
         private string _email;
-        private List<Role> _roles;
+        //private List<Role> _roles;
         private string _avatar;
         private string _colour;
 
@@ -23,7 +23,7 @@ namespace Domain.User
         public string LastName { get => _lastName; init => _lastName = value; }
         public Password Password { get => _password; init => _password = value; }
         public string Email { get => _email; init => _email = value; }
-        public List<Role> Roles { get => _roles; init => _roles = value; }
+        //public List<Role> Roles { get => _roles; init => _roles = value; }
         public string Avatar { get => _avatar; init => _avatar = value; }
         public string Colour { get => _colour; init => _colour = value; }
 
