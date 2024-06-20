@@ -124,7 +124,7 @@ public class TeamController : ControllerBase
         }
         catch (Exception ex)
         {
-            var errorMessage = new AuthenticationResponseMessage("Error during the creation of the project.");
+            var errorMessage = new AuthenticationResponseMessage("Error during the creation of the association between role and member.");
             return BadRequest(errorMessage);
         }
     }
@@ -142,6 +142,23 @@ public class TeamController : ControllerBase
         catch (Exception ex)
         {
             var errorMessage = new AuthenticationResponseMessage("Error during the get of the members.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [HttpGet("GetProjects")]
+    public async Task<IActionResult> GetProjects()
+    {
+        try
+        {
+            var query = new GetProjectsQuery();
+            ListProjectsResult result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the projects.");
             return BadRequest(errorMessage);
         }
     }

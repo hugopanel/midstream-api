@@ -21,6 +21,11 @@ namespace Infrastructure.Repositories
             return _dbContext.Project.SingleOrDefault(t => t.Id.ToString() == id);
         }
 
+        public List<Project> GetProjects()
+        {
+            return _dbContext.Project.ToList();
+        }
+
         public void Add(Project project)
         {
             _dbContext.Project.Add(project);
