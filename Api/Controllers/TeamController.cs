@@ -135,13 +135,49 @@ public class TeamController : ControllerBase
         try
         {
             var query = new GetMembersByTeamQuery(teamId);
-            ListMembersResult result = await _mediator.Send(query);
+            ListMembersToDisplayResult result = await _mediator.Send(query);
 
             return Ok(result);
         }
         catch (Exception ex)
         {
             var errorMessage = new AuthenticationResponseMessage("Error during the get of the members.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [HttpGet("GetTeams")]
+    public async Task<IActionResult> GetTeams()
+    {
+        try
+        {
+            var query = new GetTeamsQuery();
+            ListTeamsResult result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the teams.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("GetTeamsByUser")]
+    public async Task<IActionResult> GetTeamsByUser()
+    {
+        try
+        {
+            var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+            var query = new GetTeamsByUserQuery(Id.ToString());
+            ListTeamsResult result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the teams.");
             return BadRequest(errorMessage);
         }
     }

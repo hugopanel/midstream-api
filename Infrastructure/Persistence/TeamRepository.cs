@@ -16,6 +16,11 @@ namespace Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
+        public List<Team> GetTeams()
+        {
+            return _dbContext.Teams.ToList();
+        }
+
         public Team? GetTeamById(string id)
         {
             return _dbContext.Teams.SingleOrDefault(t => t.Id.ToString() == id);

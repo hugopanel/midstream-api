@@ -9,6 +9,10 @@ public interface IMemberRepository
 
     Member? GetMemberById(string id);
 
+    List<string> GetRolesByMemberId(string memberId);
+    List<Guid> GetTeamsIdByUserId(string userId);
+    Role? GetRoleById(string roleId);
+
     void Add(Member member);
     void Save(Member member);
 

@@ -31,6 +31,21 @@ namespace Infrastructure.Repositories
             return _dbContext.Members.Where(m => m.TeamId.ToString() == teamId).ToList();
         }
 
+        public List<string> GetRolesByMemberId(string memberId)
+        {
+            return _dbContext.MemberRole.Where(mr => mr.MemberId.ToString() == memberId).Select(mr => mr.RoleId.ToString()).ToList();
+        }
+
+        public List<Guid> GetTeamsIdByUserId(string userId)
+        {
+            return _dbContext.Members.Where(m => m.UserId.ToString() == userId).Select(m => m.TeamId).ToList();
+        }
+
+        public Role? GetRoleById(string roleId)
+        {
+            return _dbContext.Role.SingleOrDefault(r => r.Id.ToString() == roleId);
+        }
+
         public void Add(Member member)
         {
             _dbContext.Members.Add(member);

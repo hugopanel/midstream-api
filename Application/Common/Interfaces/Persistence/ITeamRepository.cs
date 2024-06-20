@@ -4,6 +4,9 @@ namespace Application.Common.Interfaces.Persistence;
 
 public interface ITeamRepository
 {
+
+    List<Team> GetTeams();
+
     Team? GetTeamById(string id);
 
     void Add(Team team);
