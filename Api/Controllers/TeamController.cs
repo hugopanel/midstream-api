@@ -146,6 +146,23 @@ public class TeamController : ControllerBase
         }
     }
 
+    [HttpGet("GetMembersNotInTeam")]
+    public async Task<IActionResult> GetMembersNotInTeam(string teamId)
+    {
+        try
+        {
+            var query = new GetMembersNotInTeamQuery(teamId);
+            ListUsersToDisplayResult result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the members.");
+            return BadRequest(errorMessage);
+        }
+    }
+
     [HttpGet("GetTeams")]
     public async Task<IActionResult> GetTeams()
     {
@@ -182,6 +199,23 @@ public class TeamController : ControllerBase
         }
     }
 
+    [HttpGet("GetTeamNameById")]
+    public async Task<IActionResult> GetTeamNameById(string teamId)
+    {
+        try
+        {
+            var query = new GetTeamNameByIdQuery(teamId);
+            StringResult result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the teams.");
+            return BadRequest(errorMessage);
+        }
+    }
+
     [HttpGet("GetProjects")]
     public async Task<IActionResult> GetProjects()
     {
@@ -189,6 +223,23 @@ public class TeamController : ControllerBase
         {
             var query = new GetProjectsQuery();
             ListProjectsResult result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the projects.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [HttpGet("GetRoles")]
+    public async Task<IActionResult> GetRoles()
+    {
+        try
+        {
+            var query = new GetRolesQuery();
+            ListRolesResult result = await _mediator.Send(query);
 
             return Ok(result);
         }

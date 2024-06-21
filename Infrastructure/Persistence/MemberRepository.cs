@@ -26,9 +26,20 @@ namespace Infrastructure.Repositories
             return _dbContext.Members.ToList();
         }
 
+        public List<Role> GetRoles() {
+            return _dbContext.Role.ToList();
+        }
+
         public List<Member> GetMembersByTeamId(string teamId)
         {
             return _dbContext.Members.Where(m => m.TeamId.ToString() == teamId).ToList();
+        }
+
+        public List<Guid> GetMembersNotInTeam(string teamId)
+        {
+            var userIdsInTeam = _dbContext.Members.Where(m => m.TeamId.ToString() == teamId).Select(m => m.UserId).ToHashSet();
+
+            return _dbContext.Users.Where(m => !userIdsInTeam.Contains(m.Id)).Select(m => m.Id).Distinct().ToList();
         }
 
         public List<string> GetRolesByMemberId(string memberId)

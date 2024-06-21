@@ -5,7 +5,10 @@ namespace Application.Common.Interfaces.Persistence;
 public interface IMemberRepository
 {
     List<Member> GetMembers();
+    List<Role> GetRoles();
+
     List<Member> GetMembersByTeamId(string teamId);
+    List<Guid> GetMembersNotInTeam(string teamId);
 
     Member? GetMemberById(string id);
 

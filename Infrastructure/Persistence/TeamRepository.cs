@@ -26,6 +26,11 @@ namespace Infrastructure.Repositories
             return _dbContext.Teams.SingleOrDefault(t => t.Id.ToString() == id);
         }
 
+        public string GetTeamNameById(string id)
+        {
+            return _dbContext.Teams.SingleOrDefault(t => t.Id.ToString() == id)?.Name;
+        }
+
         public void Add(Team team)
         {
             _dbContext.Teams.Add(team);
