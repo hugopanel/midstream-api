@@ -43,7 +43,7 @@ public class ModulesController : ControllerBase
         try
         {
             Console.WriteLine("GetRecommendedModules");
-            var command = new GetRecommendedModulesQuery(request.descriptionRequest);
+            var command = new GetRecommendedModulesQuery(request.prompt);
             GetModulesResult result = await _mediator.Send(command);
             return Ok(result);
         }

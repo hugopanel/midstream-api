@@ -1,3 +1,3 @@
 ﻿namespace Api.Models;
 
-public record GetRecommendedModulesRequest(string descriptionRequest);
+public record GetRecommendedModulesRequest(string prompt);

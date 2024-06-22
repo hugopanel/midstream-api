@@ -13,7 +13,5 @@ public class ProjectRepository : IProjectRepository
     public List<Project>? GetAllProjects()
     {
         return JsonSerializer.Deserialize<List<Project>>(File.ReadAllText("../Infrastructure/Persistence/projects.json"));
-
     }
-
 }
