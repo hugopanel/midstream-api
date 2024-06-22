@@ -17,7 +17,7 @@ public class CreateProjectCommandHandler(IProjectRepository projectRepository, I
         // Create the new Project
         var newProject = new Project
         {
-            Id = Guid.NewGuid(),
+            Id = 0,
             Name = command.Name,
             Description = command.Description,
             Beginning_date = DateTime.Now.ToUniversalTime()
