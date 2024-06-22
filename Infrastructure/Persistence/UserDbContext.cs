@@ -12,6 +12,13 @@ namespace Infrastructure.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Permission> Permission { get; set; }
+        public DbSet<Project> Project { get; set; }
+        public DbSet<Role> Role { get; set; }
+        public DbSet<RolePermission> RolePermission { get; set; }
+        public DbSet<Member> Members { get; set; }
+        public DbSet<MemberRole> MemberRole { get; set; }
+        public DbSet<Team> Teams { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,6 +31,30 @@ namespace Infrastructure.Data
                     pw.Property(p => p.HashedPassword).HasColumnName("PasswordHash").UsePropertyAccessMode(PropertyAccessMode.Field);
                 });
             });
+
+            modelBuilder.Entity<RolePermission>()
+                .HasKey(rp => new { rp.RoleId, rp.PermissionId });
+
+            modelBuilder.Entity<MemberRole>()
+                .HasKey(mr => new { mr.MemberId, mr.RoleId });
+
+            /* modelBuilder.Entity<Member>()
+                .HasMany(m => m.Roles)
+                .WithMany(r => r.Members)
+                .UsingEntity<Dictionary<string, object>>(
+                    "MemberRole",
+                    j => j.HasOne<Role>().WithMany().HasForeignKey("RoleId"),
+                    j => j.HasOne<Member>().WithMany().HasForeignKey("MemberId"));
+
+            modelBuilder.Entity<Role>()
+                .HasMany(r => r.Permissions)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Role>()
+                .HasOne(r => r.Project)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Cascade);*/
         }
     }
 }

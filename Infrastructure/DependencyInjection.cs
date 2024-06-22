@@ -27,6 +27,9 @@ namespace Infrastructure
                 options.UseNpgsql(configuration.GetConnectionString("postgres")));
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IMemberRepository, MemberRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IEmailService, EmailService>();
 
 

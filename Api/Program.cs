@@ -1,6 +1,9 @@
 using Application;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
+using Application.Common.Interfaces.Persistence;
+using Infrastructure.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -8,7 +11,6 @@ var builder = WebApplication.CreateBuilder(args);
 
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
-
 
     builder.Services.AddSwaggerGen();
     builder.Services.AddSwaggerGen(c =>
