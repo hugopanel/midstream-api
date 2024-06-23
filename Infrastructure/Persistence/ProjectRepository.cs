@@ -26,6 +26,11 @@ namespace Infrastructure.Repositories
             return _dbContext.Project.ToList();
         }
 
+        public List<Project> GetProjectsWithoutTeam()
+        {
+            return _dbContext.Project.Where(p => !_dbContext.Teams.Any(t => t.ProjectId == p.Id)).ToList();
+        }
+
         public void Add(Project project)
         {
             _dbContext.Project.Add(project);

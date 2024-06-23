@@ -27,7 +27,7 @@ public class TeamController : ControllerBase
     {
         try
         {
-            var command = new CreateTeamCommand(request.ProjectId, request.memberstoadd.Select(m => new Application.Teams.Commands.UserToAdd(m.userId, m.rolesId)).ToList());
+            var command = new CreateTeamCommand(request.Name, request.memberstoadd.Select(m => new Application.Teams.Commands.UserToAdd(m.userId, m.rolesId)).ToList());
 
             TeamResult result = await _mediator.Send(command);
 

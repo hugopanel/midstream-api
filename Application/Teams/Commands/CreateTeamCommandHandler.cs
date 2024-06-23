@@ -16,14 +16,23 @@ public class CreateTeamCommandHandler(ITeamRepository teamRepository, IProjectRe
 
     public async Task<TeamResult> Handle(CreateTeamCommand command, CancellationToken cancellationToken)
     {
-        var project = _projectRepository.GetProjectById(command.ProjectId);
+        var newProject = new Project
+        {
+            Id = Guid.NewGuid(), 
+            Name = command.Name,
+            Description = "basic description",
+            Beginning_date = DateTime.Now.ToUniversalTime()
+        };
+
+        // Add new project
+        _projectRepository.Add(newProject);
 
         // Create the new team
         var newTeam = new Team
         {
             Id = Guid.NewGuid(),
-            Name = project.Name,
-            ProjectId =project.Id
+            Name = newProject.Name,
+            ProjectId =newProject.Id
         };
 
         // Add new team
