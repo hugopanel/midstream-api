@@ -54,6 +54,23 @@ public class TeamController : ControllerBase
         }
     }
 
+    [HttpPost("DeleteTeam")]
+    public async Task<IActionResult> DeleteTeam(DeleteTeamRequest request)
+    {
+        try
+        {
+            var command = new DeleteTeamCommand(request.teamId);
+            StringResult result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the deletion of the team.");
+            return BadRequest(errorMessage);
+        }
+    }
+
     [HttpPost("CreateProject")]
     public async Task<IActionResult> CreateProject(CreateProjectRequest request)
     {
@@ -112,6 +129,23 @@ public class TeamController : ControllerBase
         }
     }
 
+    [HttpPost("DeleteMember")]
+    public async Task<IActionResult> DeleteMember(DeleteMemberRequest request)
+    {
+        try
+        {
+            var command = new DeleteMemberCommand(request.memberId);
+            StringResult result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the creation of the association between role and member.");
+            return BadRequest(errorMessage);
+        }
+    }
+
     [HttpPost("CreateMemberRole")]
     public async Task<IActionResult> CreateMemberRole(CreateMemberRoleRequest request)
     {
@@ -119,6 +153,23 @@ public class TeamController : ControllerBase
         {
             var roleCommand = new CreateMemberRoleCommand(request.MemberId, request.RoleId);
             MemberRoleResult result = await _mediator.Send(roleCommand);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the creation of the association between role and member.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [HttpPost("DeleteMemberRole")]
+    public async Task<IActionResult> DeleteMemberRole(DeleteMemberRoleRequest request)
+    {
+        try
+        {
+            var command = new DeleteMemberRoleCommand(request.memberId, request.roleId);
+            StringResult result = await _mediator.Send(command);
 
             return Ok(result);
         }
