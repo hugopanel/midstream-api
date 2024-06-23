@@ -27,22 +27,9 @@ public class TeamController : ControllerBase
     {
         try
         {
-            var command = new CreateTeamCommand(request.Name, request.ProjectId);
+            var command = new CreateTeamCommand(request.ProjectId, request.memberstoadd.Select(m => new Application.Teams.Commands.UserToAdd(m.userId, m.rolesId)).ToList());
 
             TeamResult result = await _mediator.Send(command);
-
-            var users = request.Users;
-
-            for(int i = 0; i < users.Count; i++)
-            {
-                var memberCommand = new CreateMemberCommand(users[i].UserId, result.Team.Id.ToString());
-                MemberResult memberResult = await _mediator.Send(memberCommand);
-                for (int j = 0; j < users[i].RolesId.Count; j++)
-                {
-                    var roleCommand = new CreateMemberRoleCommand(memberResult.Member.Id.ToString(), users[i].RolesId[j]);
-                    MemberRoleResult roleResult = await _mediator.Send(roleCommand);
-                }
-            }
 
             return Ok(result);
         }
@@ -61,10 +48,6 @@ public class TeamController : ControllerBase
         {
             var memberstoadd = request.memberstoadd ?? new List<Api.Models.MemberToAdd>();
             var membersroletoadd = request.membersroletoadd ?? new List<Api.Models.MemberRoleToAdd>();
-
-            Console.WriteLine($"UpdateTeamRequest: teamId={request.teamId}, name={request.name}");
-            Console.WriteLine($"MembersToAdd Count: {memberstoadd.Count}");
-            Console.WriteLine($"MembersRoleToAdd Count: {membersroletoadd.Count}");
 
             var command = new UpdateTeamCommand(
                 request.teamId,
@@ -320,6 +303,23 @@ public class TeamController : ControllerBase
         {
             var query = new GetRolesQuery();
             ListRolesResult result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the projects.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [HttpGet("GetUsers")]
+    public async Task<IActionResult> GetUsers()
+    {
+        try
+        {
+            var query = new GetUsersQuery();
+            ListUsersToDisplayResult result = await _mediator.Send(query);
 
             return Ok(result);
         }
