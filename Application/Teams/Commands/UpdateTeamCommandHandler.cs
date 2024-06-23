@@ -24,38 +24,75 @@ public class UpdateTeamCommandHandler(ITeamRepository teamRepository, IMemberRep
         }
         else
         {
-            // Add members to the team
-            foreach (var membertoadd in command.memberstoadd)
-            {
-                var newMember = new Member
-                {
-                    Id = Guid.NewGuid(),
-                    TeamId = team.Id,
-                    UserId = Guid.Parse(membertoadd.userId)
-                };
 
-                _memberRepository.Add(newMember);
-                foreach (var roleId in membertoadd.rolesId)
+            // Find all the distinct ids of the members of the team
+            var members = _memberRepository.GetMembersByTeamId(team.Id.ToString());
+            var membersId = members.Select(m => m.Id).Distinct().ToList();
+
+            if (membersId.Count > 0)
+            {
+                foreach (var memberId in membersId)
                 {
-                    var newMemberRole = new MemberRole
+                    // Remove all the roles of the member
+                    var memberRoles = _memberRepository.GetMemberRolesByMemberId(memberId.ToString());
+                    foreach (var memberRole in memberRoles)
                     {
-                        Id = Guid.NewGuid(),
-                        MemberId = newMember.Id,
-                        RoleId = Guid.Parse(roleId)
-                    };
-                    _memberRepository.AddMemberRole(newMemberRole);
+                        _memberRepository.DeleteMemberRole(memberRole);
+                    }
                 }
             }
 
-            foreach(var memberroletoadd in command.membersroletoadd)
+            if (command.membersroletoadd.Count > 0)
             {
-                var newMemberRole = new MemberRole
+                // Add roles to the members
+                foreach (var memberroletoadd in command.membersroletoadd)
                 {
-                    Id = Guid.NewGuid(),
-                    MemberId = Guid.Parse(memberroletoadd.memberId),
-                    RoleId = Guid.Parse(memberroletoadd.roleId)
-                };
-                _memberRepository.AddMemberRole(newMemberRole);
+                    if (memberroletoadd.memberId != "" && memberroletoadd.roleId != "")
+                    {
+                        var newMemberRole = new MemberRole
+                        {
+                            Id = Guid.NewGuid(),
+                            MemberId = Guid.Parse(memberroletoadd.memberId),
+                            RoleId = Guid.Parse(memberroletoadd.roleId)
+                        };
+                        _memberRepository.AddMemberRole(newMemberRole);
+                    }
+                }
+            }
+
+            // Add members to the team
+            if (command.memberstoadd.Count > 0)
+            {
+                foreach (var membertoadd in command.memberstoadd)
+                {
+                    if (membertoadd.userId != "")
+                    {
+                        if (_memberRepository.GetMemberById(membertoadd.userId) != null)
+                        {
+                            throw new Exception("Member already exists");
+                        }
+
+                        var newMember = new Member
+                        {
+                            Id = Guid.NewGuid(),
+                            TeamId = team.Id,
+                            UserId = Guid.Parse(membertoadd.userId)
+                        };
+
+                        _memberRepository.Add(newMember);
+                        foreach (var roleId in membertoadd.rolesId)
+                        {
+                            var newMemberRole = new MemberRole
+                            {
+                                Id = Guid.NewGuid(),
+                                MemberId = newMember.Id,
+                                RoleId = Guid.Parse(roleId)
+                            };
+                            _memberRepository.AddMemberRole(newMemberRole);
+                        }
+                    }
+
+                }
             }
 
             team.Name = command.name;

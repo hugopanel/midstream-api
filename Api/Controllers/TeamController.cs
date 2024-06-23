@@ -59,6 +59,13 @@ public class TeamController : ControllerBase
     {
         try
         {
+            var memberstoadd = request.memberstoadd ?? new List<Api.Models.MemberToAdd>();
+            var membersroletoadd = request.membersroletoadd ?? new List<Api.Models.MemberRoleToAdd>();
+
+            Console.WriteLine($"UpdateTeamRequest: teamId={request.teamId}, name={request.name}");
+            Console.WriteLine($"MembersToAdd Count: {memberstoadd.Count}");
+            Console.WriteLine($"MembersRoleToAdd Count: {membersroletoadd.Count}");
+
             var command = new UpdateTeamCommand(
                 request.teamId,
                 request.name,
@@ -71,7 +78,7 @@ public class TeamController : ControllerBase
         }
         catch (Exception ex)
         {
-            var errorMessage = new AuthenticationResponseMessage("Error during the deletion of the team.");
+            var errorMessage = new AuthenticationResponseMessage(ex.Message);
             return BadRequest(errorMessage);
         }
     }
