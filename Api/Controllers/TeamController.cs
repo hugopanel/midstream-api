@@ -54,6 +54,28 @@ public class TeamController : ControllerBase
         }
     }
 
+    [HttpPost("UpdateTeam")]
+    public async Task<IActionResult> UpdateTeam(UpdateTeamRequest request)
+    {
+        try
+        {
+            var command = new UpdateTeamCommand(
+                request.teamId,
+                request.name,
+                request.memberstoadd.Select(m => new Application.Teams.Commands.MemberToAdd(m.userId, m.rolesId)).ToList(),
+                request.membersroletoadd.Select(m => new Application.Teams.Commands.MemberRoleToAdd(m.memberId, m.roleId)).ToList()
+            );
+            StringResult result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the deletion of the team.");
+            return BadRequest(errorMessage);
+        }
+    }
+
     [HttpPost("DeleteTeam")]
     public async Task<IActionResult> DeleteTeam(DeleteTeamRequest request)
     {
