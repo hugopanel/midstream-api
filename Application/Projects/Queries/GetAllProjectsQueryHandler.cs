@@ -14,8 +14,8 @@ public class GetAllProjectsQueryHandler(IProjectRepository projectRepository)
 
     public async Task<GetProjectsResult> Handle(GetAllProjectsQuery request, CancellationToken cancellationToken)
     {
-        var projects = _projectRepository.GetAllProjects();
-                
+        var projects = _projectRepository.GetProjects();       
+        
         return new GetProjectsResult(projects);
     }
 
