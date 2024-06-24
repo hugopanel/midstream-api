@@ -21,6 +21,11 @@ namespace Infrastructure.Repositories
             return _dbContext.Members.SingleOrDefault(t => t.Id.ToString() == id);
         }
 
+        public MemberRole? GetMemberRole(string memberId, string roleId)
+        {
+            return _dbContext.MemberRole.SingleOrDefault(mr => mr.MemberId.ToString() == memberId && mr.RoleId.ToString() == roleId);
+        }
+
         public List<Member> GetMembers()
         {
             return _dbContext.Members.ToList();
@@ -47,6 +52,11 @@ namespace Infrastructure.Repositories
             return _dbContext.MemberRole.Where(mr => mr.MemberId.ToString() == memberId).Select(mr => mr.RoleId.ToString()).ToList();
         }
 
+        public List<MemberRole> GetMemberRolesByMemberId(string memberId)
+        {
+            return _dbContext.MemberRole.Where(mr => mr.MemberId.ToString() == memberId).ToList();
+        }
+
         public List<Guid> GetTeamsIdByUserId(string userId)
         {
             return _dbContext.Members.Where(m => m.UserId.ToString() == userId).Select(m => m.TeamId).ToList();
@@ -69,9 +79,21 @@ namespace Infrastructure.Repositories
             _dbContext.SaveChanges();
         }
 
+        public void Delete(Member member)
+        {
+            _dbContext.Members.Remove(member);
+            _dbContext.SaveChanges();
+        }
+
         public void AddMemberRole(MemberRole memberRole)
         {
             _dbContext.MemberRole.Add(memberRole);
+            _dbContext.SaveChanges();
+        }
+
+        public void DeleteMemberRole(MemberRole memberRole)
+        {
+            _dbContext.MemberRole.Remove(memberRole);
             _dbContext.SaveChanges();
         }
 

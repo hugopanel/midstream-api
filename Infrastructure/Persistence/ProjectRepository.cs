@@ -20,10 +20,20 @@ namespace Infrastructure.Repositories
         {
             return _dbContext.Project.SingleOrDefault(t => t.Id.ToString() == id);
         }
+        
+        public Project? GetProjectByName(string name)
+        {
+            return _dbContext.Project.SingleOrDefault(t => t.Name == name);
+        }
 
-        public List<Project> GetAllProjects()
+        public List<Project> GetProjects()
         {
             return _dbContext.Project.ToList();
+        }
+
+        public List<Project> GetProjectsWithoutTeam()
+        {
+            return _dbContext.Project.Where(p => !_dbContext.Teams.Any(t => t.ProjectId == p.Id)).ToList();
         }
 
         public void Add(Project project)

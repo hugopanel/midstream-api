@@ -12,15 +12,11 @@ public class LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerato
 
     public async Task<AuthenticationResult> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
-        // Check if user exists with this username and password combination
-        // TODO: Hash the password and use the salt
-
+        // Get the user
         var user = _userRepository.GetUserByEmail(request.Email);
         if (user is null)
-        {
             throw new Exception("Invalid email."); // TODO: Create custom exception
-        }
-            
+
         // Check that the password is the same
         if (!user.VerifyPassword(request.Password))
         {

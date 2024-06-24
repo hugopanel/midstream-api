@@ -27,22 +27,9 @@ public class TeamController : ControllerBase
     {
         try
         {
-            var command = new CreateTeamCommand(request.Name, request.ProjectId);
+            var command = new CreateTeamCommand(request.Name, request.memberstoadd.Select(m => new Application.Teams.Commands.UserToAdd(m.userId, m.rolesId)).ToList());
 
             TeamResult result = await _mediator.Send(command);
-
-            var users = request.Users;
-
-            for(int i = 0; i < users.Count; i++)
-            {
-                var memberCommand = new CreateMemberCommand(users[i].UserId, result.Team.Id.ToString());
-                MemberResult memberResult = await _mediator.Send(memberCommand);
-                for (int j = 0; j < users[i].RolesId.Count; j++)
-                {
-                    var roleCommand = new CreateMemberRoleCommand(memberResult.Member.Id.ToString(), users[i].RolesId[j]);
-                    MemberRoleResult roleResult = await _mediator.Send(roleCommand);
-                }
-            }
 
             return Ok(result);
         }
@@ -50,6 +37,48 @@ public class TeamController : ControllerBase
         {
             Console.WriteLine(ex);
             var errorMessage = new AuthenticationResponseMessage("Error during the creation of the team.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [HttpPost("UpdateTeam")]
+    public async Task<IActionResult> UpdateTeam(UpdateTeamRequest request)
+    {
+        try
+        {
+            var memberstoadd = request.memberstoadd ?? new List<Api.Models.MemberToAdd>();
+            var membersroletoadd = request.membersroletoadd ?? new List<Api.Models.MemberRoleToAdd>();
+
+            var command = new UpdateTeamCommand(
+                request.teamId,
+                request.name,
+                request.memberstoadd.Select(m => new Application.Teams.Commands.MemberToAdd(m.userId, m.rolesId)).ToList(),
+                request.membersroletoadd.Select(m => new Application.Teams.Commands.MemberRoleToAdd(m.memberId, m.roleId)).ToList()
+            );
+            StringResult result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage(ex.Message);
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [HttpPost("DeleteTeam")]
+    public async Task<IActionResult> DeleteTeam(DeleteTeamRequest request)
+    {
+        try
+        {
+            var command = new DeleteTeamCommand(request.teamId);
+            StringResult result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the deletion of the team.");
             return BadRequest(errorMessage);
         }
     }
@@ -112,6 +141,23 @@ public class TeamController : ControllerBase
         }
     }
 
+    [HttpPost("DeleteMember")]
+    public async Task<IActionResult> DeleteMember(DeleteMemberRequest request)
+    {
+        try
+        {
+            var command = new DeleteMemberCommand(request.memberId);
+            StringResult result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the creation of the association between role and member.");
+            return BadRequest(errorMessage);
+        }
+    }
+
     [HttpPost("CreateMemberRole")]
     public async Task<IActionResult> CreateMemberRole(CreateMemberRoleRequest request)
     {
@@ -119,6 +165,23 @@ public class TeamController : ControllerBase
         {
             var roleCommand = new CreateMemberRoleCommand(request.MemberId, request.RoleId);
             MemberRoleResult result = await _mediator.Send(roleCommand);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the creation of the association between role and member.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [HttpPost("DeleteMemberRole")]
+    public async Task<IActionResult> DeleteMemberRole(DeleteMemberRoleRequest request)
+    {
+        try
+        {
+            var command = new DeleteMemberRoleCommand(request.memberId, request.roleId);
+            StringResult result = await _mediator.Send(command);
 
             return Ok(result);
         }
@@ -240,6 +303,23 @@ public class TeamController : ControllerBase
         {
             var query = new GetRolesQuery();
             ListRolesResult result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the projects.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [HttpGet("GetUsers")]
+    public async Task<IActionResult> GetUsers()
+    {
+        try
+        {
+            var query = new GetUsersQuery();
+            ListUsersToDisplayResult result = await _mediator.Send(query);
 
             return Ok(result);
         }

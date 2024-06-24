@@ -42,5 +42,11 @@ namespace Infrastructure.Repositories
             _dbContext.Teams.Update(team);
             _dbContext.SaveChanges();
         }
+
+        public void Delete(Team team)
+        {
+            _dbContext.Teams.Remove(team);
+            _dbContext.SaveChanges();
+        }
     }
 }

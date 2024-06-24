@@ -12,4 +12,5 @@ public interface ITeamRepository
 
     void Add(Team team);
     void Save(Team team);
+    void Delete(Team team);
 }

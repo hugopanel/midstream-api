@@ -1,17 +1,56 @@
+using System.Reflection;
+using System.Runtime.Loader;
+using Api;
 using Application;
+using Application.Common;
 using Infrastructure;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
-using Application.Common.Interfaces.Persistence;
-using Infrastructure.Repositories;
-using Microsoft.Extensions.DependencyInjection;
+
+ModuleHandler moduleHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    builder.Services.AddControllers();
+    // Load modules
+    Console.WriteLine("Loading modules...");
+    moduleHandler = new ModuleHandler();
+    var modulePath = Path.Combine(AppContext.BaseDirectory, "Modules");
+    if (!Directory.Exists(modulePath))
+        Directory.CreateDirectory(modulePath);
 
+    // Load the assemblies
+    List<Assembly> assemblies = new();
+    foreach (var moduleFile in Directory.GetFiles(modulePath, "*.dll"))
+    {
+        AssemblyLoadContext assemblyLoadContext = new(moduleFile);
+        var assembly = assemblyLoadContext.LoadFromAssemblyPath(moduleFile);
+        assemblies.Add(assembly);
+    }
+    
+    moduleHandler.LoadModulesFromAssemblies(assemblies);
+    
+    // Add controllers from modules
+    var controllerBuilder = builder.Services.AddControllers();
+    foreach (var module in moduleHandler.Modules)
+    {
+        var assembly = module.GetType().Assembly;
+        controllerBuilder.AddApplicationPart(assembly);
+    }
+
+    // Add module route conventions (prefixes to avoid conflits)
+    builder.Services.Configure<MvcOptions>(options =>
+    {
+        foreach (var module in moduleHandler.Modules)
+        {
+            var assembly = module.GetType().Assembly;
+            options.Conventions.Add(new ModuleRouteConvention(module.RoutePrefix, assembly.GetName().Name));
+        }
+    });
+    Console.WriteLine("Modules loaded.");
+    
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
-
+    
     builder.Services.AddSwaggerGen();
     builder.Services.AddSwaggerGen(c =>
     {
@@ -21,7 +60,7 @@ var builder = WebApplication.CreateBuilder(args);
             Name = "Authorization",
             In = Microsoft.OpenApi.Models.ParameterLocation.Header,
             Description = "JWT Bearer Token",
-            Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+            // Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
             BearerFormat = "JWT",
             Scheme = "bearer"
         });
@@ -37,7 +76,7 @@ var builder = WebApplication.CreateBuilder(args);
                         Id = "Bearer",
                         Type = ReferenceType.SecurityScheme
                     }
-                },
+                }, 
                 new List<string>()
             }
         });
@@ -48,6 +87,12 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddInfrastructure(builder.Configuration);
 
     builder.Services.AddAuthentication();
+
+    // Let modules configure services
+    foreach (var module in moduleHandler.Modules)
+    {
+        module.ConfigureServices(builder.Services);
+    }
 }
 
 var app = builder.Build();
