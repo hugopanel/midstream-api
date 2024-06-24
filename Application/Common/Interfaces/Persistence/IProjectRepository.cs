@@ -5,6 +5,7 @@ namespace Application.Common.Interfaces.Persistence;
 public interface IProjectRepository
 {
     Project? GetProjectById(string id);
+    Project? GetProjectByName(string name);
 
     List<Project> GetProjects();
     List<Project> GetProjectsWithoutTeam();

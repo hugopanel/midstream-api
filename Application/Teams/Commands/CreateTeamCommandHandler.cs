@@ -16,56 +16,67 @@ public class CreateTeamCommandHandler(ITeamRepository teamRepository, IProjectRe
 
     public async Task<TeamResult> Handle(CreateTeamCommand command, CancellationToken cancellationToken)
     {
-        var newProject = new Project
+        // Check if the project exists
+        var project = _projectRepository.GetProjectByName(command.Name);
+        
+        if (project != null)
         {
-            Id = Guid.NewGuid(), 
-            Name = command.Name,
-            Description = "basic description",
-            Beginning_date = DateTime.Now.ToUniversalTime()
-        };
-
-        // Add new project
-        _projectRepository.Add(newProject);
-
-        // Create the new team
-        var newTeam = new Team
+            throw new Exception("Project already exists");
+        }
+        else
         {
-            Id = Guid.NewGuid(),
-            Name = newProject.Name,
-            ProjectId =newProject.Id
-        };
-
-        // Add new team
-        _teamRepository.Add(newTeam);
-
-        // Add members to the team
-        foreach (var membertoadd in command.memberstoadd)
-        {
-            var newMember = new Member
+            // Create the new Project
+            var newProject = new Project
             {
                 Id = Guid.NewGuid(),
-                TeamId = newTeam.Id,
-                UserId = Guid.Parse(membertoadd.userId)
+                Name = command.Name,
+                Description = "basic description",
+                Beginning_date = DateTime.Now.ToUniversalTime()
             };
 
-            _memberRepository.Add(newMember);
+            // Add new project
+            _projectRepository.Add(newProject);
 
-            // Add roles to the members
-            foreach (var roleId in membertoadd.rolesId)
+            // Create the new team
+            var newTeam = new Team
             {
-                var newMemberRole = new MemberRole
+                Id = Guid.NewGuid(),
+                Name = newProject.Name,
+                ProjectId = newProject.Id
+            };
+
+            // Add new team
+            _teamRepository.Add(newTeam);
+
+            // Add members to the team
+            foreach (var membertoadd in command.memberstoadd)
+            {
+                var newMember = new Member
                 {
                     Id = Guid.NewGuid(),
-                    MemberId = newMember.Id,
-                    RoleId = Guid.Parse(roleId)
+                    TeamId = newTeam.Id,
+                    UserId = Guid.Parse(membertoadd.userId)
                 };
-                _memberRepository.AddMemberRole(newMemberRole);
-                
+
+                _memberRepository.Add(newMember);
+
+                // Add roles to the members
+                foreach (var roleId in membertoadd.rolesId)
+                {
+                    var newMemberRole = new MemberRole
+                    {
+                        Id = Guid.NewGuid(),
+                        MemberId = newMember.Id,
+                        RoleId = Guid.Parse(roleId)
+                    };
+                    _memberRepository.AddMemberRole(newMemberRole);
+
+                }
+
             }
 
+            // Return new team
+            return new TeamResult(newTeam);
         }
-
-        // Return new team
-        return new TeamResult(newTeam);
     }
 }
