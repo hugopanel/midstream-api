@@ -1,6 +1,6 @@
 namespace Api.Models;
 
-public record CreateTeamRequest(string Name, string ProjectId, List<UserRoles> Users);
+public record CreateTeamRequest(string Name, List<UserToAdd> memberstoadd);
 
-public record UserRoles(string UserId, List<string> RolesId);
+public record UserToAdd(string userId, List<string> rolesId);
 

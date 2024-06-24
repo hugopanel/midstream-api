@@ -10,6 +10,7 @@ using Infrastructure.Authentication;
 using Infrastructure.Data;
 using Infrastructure.Email;
 using Infrastructure.Repositories;
+using Infrastructure.MongoDb;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -26,9 +27,12 @@ namespace Infrastructure
             services.AddDbContext<UserDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("postgres")));
 
+            services.AddSingleton<MongoDbContext>();
+
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IMemberRepository, MemberRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IEmailService, EmailService>();
 
