@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,13 +37,9 @@ namespace Infrastructure.Migrations
                     FirstName = table.Column<string>(type: "text", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false),
                     PasswordHash = table.Column<string>(type: "text", nullable: false),
-<<<<<<<< HEAD:Infrastructure/Migrations/20240611182023_InitialCreate.cs
                     Email = table.Column<string>(type: "text", nullable: false),
                     Avatar = table.Column<string>(type: "text", nullable: false),
                     Colour = table.Column<string>(type: "text", nullable: false)
-========
-                    Email = table.Column<string>(type: "text", nullable: false)
->>>>>>>> 6634646 (Updated migrations):Infrastructure/Migrations/20240606141850_Initial.cs
                 },
                 constraints: table =>
                 {
