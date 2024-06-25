@@ -42,27 +42,6 @@ namespace Domain.Entities
         public string AssignedTo { get; set; }
 
         [BsonElement("related_to")]
-        public string RelatedTo { get; set; }
+        public List<string> RelatedTo { get; set; }
     }
 }
-
-
-/*
-namespace Domain.Entities
-{
-    public class Tache
-    {
-        public Guid Id { get; set; }
-        public DateTime beginning_date { get; set; }
-        public DateTime end_date { get; set; }
-        public string priority { get; set; }
-        public string status { get; set; }
-        public string type_of_task { get; set; }
-        public string Title { get; set; } 
-        public string description { get; set; }
-        public Guid ProjectId { get; set; }
-        public string author { get; set; }
-        public List<Guid> assigned_to { get; set; }
-        public List<Guid> related_to { get; set; }
-    }
-}*/
