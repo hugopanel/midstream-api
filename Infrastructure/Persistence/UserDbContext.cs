@@ -35,8 +35,27 @@ namespace Infrastructure.Data
             modelBuilder.Entity<RolePermission>()
                 .HasKey(rp => new { rp.RoleId, rp.PermissionId });
 
-            modelBuilder.Entity<MemberRole>()
-                .HasKey(mr => new { mr.MemberId, mr.RoleId });
+            modelBuilder.Entity<MemberRole>(entity =>
+            {
+                entity.HasKey(mr => new { mr.MemberId, mr.RoleId });
+            });
+                
+
+            modelBuilder.Entity<Project>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedNever(); // We prefer to generate the GUID values in the application instead of the database
+            });
+
+            modelBuilder.Entity<Member>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+            });
+
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+            });
 
             /* modelBuilder.Entity<Member>()
                 .HasMany(m => m.Roles)
