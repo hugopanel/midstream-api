@@ -6,8 +6,8 @@ namespace Application.Whiteboard;
 
 public class WhiteboardHub : Hub, IWhiteboardHub
 {
-    private static readonly Dictionary<string, List<WhiteboardMessage>> Drawings = new(); 
-    // private static readonly List<WhiteboardMessage> Drawing = new();
+    private static readonly Dictionary<string, List<WhiteboardMessage>> Drawings = new();
+    private static readonly Dictionary<string, List<WhiteboardMessage>> UndoneDrawings = new();
 
     public async Task JoinWhiteboard(string whiteboardId)
     {
@@ -15,10 +15,10 @@ public class WhiteboardHub : Hub, IWhiteboardHub
         
         // Check if the whiteboard already has users in it
         if (!Drawings.ContainsKey(whiteboardId))
-        {
             Drawings.Add(whiteboardId, new List<WhiteboardMessage>());
-        }
-        
+        if (!UndoneDrawings.ContainsKey(whiteboardId))
+            UndoneDrawings.Add(whiteboardId, new List<WhiteboardMessage>());
+
         // TODO: Add persistence, store the drawings somewhere
     }
 
@@ -32,6 +32,7 @@ public class WhiteboardHub : Hub, IWhiteboardHub
     {
         // TODO: Add a way to make sure the drawings appear with the same Z-index for all clients
         Drawings[whiteboardId].Add(message);
+        UndoneDrawings[whiteboardId].Clear();
         
         await Clients.OthersInGroup(whiteboardId).SendAsync("ReceiveDrawing", message);
         
@@ -42,5 +43,35 @@ public class WhiteboardHub : Hub, IWhiteboardHub
     {
         await Clients.Caller.SendAsync("RetrieveDrawing", Drawings[whiteboardId]);
         Console.WriteLine(String.Join("\t", "RetrieveDrawing", whiteboardId, Drawings[whiteboardId].Count));
+    }
+
+    public async Task UndoLastDrawing(string whiteboardId)
+    {
+        if (Drawings[whiteboardId].Count > 0)
+        {
+            var lastDrawing = Drawings[whiteboardId].Last();
+            Drawings[whiteboardId].Remove(lastDrawing);
+            UndoneDrawings[whiteboardId].Add(lastDrawing);
+            await Clients.Group(whiteboardId).SendAsync("RemoveDrawing", lastDrawing);
+        }
+    }
+
+    public async Task RedoLastUndoneDrawing(string whiteboardId)
+    {
+        if (UndoneDrawings[whiteboardId].Count > 0)
+        {
+            var lastUndoneDrawing = UndoneDrawings[whiteboardId].Last();
+            UndoneDrawings[whiteboardId].Remove(lastUndoneDrawing);
+            Drawings[whiteboardId].Add(lastUndoneDrawing);
+            await Clients.Group(whiteboardId).SendAsync("ReceiveDrawing", lastUndoneDrawing);
+        }
+    }
+
+    public async Task ClearWhiteboard(string whiteboardId)
+    {
+        UndoneDrawings[whiteboardId].Clear();
+        
+        Drawings[whiteboardId].Clear();
+        await Clients.Group(whiteboardId).SendAsync("ClearWhiteboard");
     }
 }

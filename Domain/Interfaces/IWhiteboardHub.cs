@@ -9,4 +9,7 @@ public interface IWhiteboardHub
     public Task LeaveWhiteboard(string whiteboardId);
     public Task SendDrawing(string whiteboardId, WhiteboardMessage message);
     public Task RetrieveDrawing(string whiteboardId);
+    public Task UndoLastDrawing(string whiteboardId);
+    public Task RedoLastUndoneDrawing(string whiteboardId);
+    public Task ClearWhiteboard(string whiteboardId);
 }
