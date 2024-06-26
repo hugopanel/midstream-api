@@ -3,6 +3,7 @@ using System.Runtime.Loader;
 using Api;
 using Application;
 using Application.Common;
+using Application.Whiteboard;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -11,6 +12,18 @@ ModuleHandler moduleHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    // Add CORS
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("CorsPolicy", policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        });
+    });
+    
     // Load modules
     Console.WriteLine("Loading modules...");
     moduleHandler = new ModuleHandler();
@@ -88,6 +101,8 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddAuthentication();
 
+    builder.Services.AddSignalR();
+
     // Let modules configure services
     foreach (var module in moduleHandler.Modules)
     {
@@ -96,6 +111,8 @@ var builder = WebApplication.CreateBuilder(args);
 }
 
 var app = builder.Build();
+
+app.UseCors("CorsPolicy");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -111,5 +128,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<WhiteboardHub>("/hubs/whiteboard");
 
 app.Run();
