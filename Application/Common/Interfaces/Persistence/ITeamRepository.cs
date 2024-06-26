@@ -9,6 +9,7 @@ public interface ITeamRepository
 
     Team? GetTeamById(string id);
     string GetTeamNameById(string id);
+    string GetProjectIdByTeamId(string id);
 
     void Add(Team team);
     void Save(Team team);
