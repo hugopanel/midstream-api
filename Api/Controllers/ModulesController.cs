@@ -1,11 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Api.Models;
 using Domain.Entities;
 using MediatR;
 using Application.Modules.Queries;
 using Application.Modules;
+using Api.Models.Modules;
 
 
 namespace Api.Controllers;

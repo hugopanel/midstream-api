@@ -1,11 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Api.Models;
 using Domain.Entities;
 using MediatR;
 using Application.Projects.Queries;
 using Application.Projects;
+using Api.Models.Projects;
 
 
 namespace Api.Controllers;
@@ -21,11 +21,11 @@ public class ProjectsController : ControllerBase
         _mediator = mediator;
     }
     [HttpGet("GetAll")]
-    public async Task<IActionResult> GetAllProjects()
+    public async Task<IActionResult> GetProjects()
     {
         try
         {
-            var command = new GetAllProjectsQuery();
+            var command = new GetProjectsQuery();
             GetProjectsResult result = await _mediator.Send(command);
             return Ok(result);
         }

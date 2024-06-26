@@ -7,14 +7,14 @@ using MediatR;
 
 namespace Application.Projects.Queries;
 
-public class GetAllProjectsQueryHandler(IProjectRepository projectRepository)
-    :IRequestHandler<GetAllProjectsQuery, GetProjectsResult>
+public class GetProjectsQueryHandler(IProjectRepository projectRepository)
+    :IRequestHandler<GetProjectsQuery, GetProjectsResult>
 {
     private IProjectRepository _projectRepository = projectRepository;
 
-    public async Task<GetProjectsResult> Handle(GetAllProjectsQuery request, CancellationToken cancellationToken)
+    public async Task<GetProjectsResult> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
     {
-        var projects = _projectRepository.GetAllProjects();
+        var projects = _projectRepository.GetProjects();
                 
         return new GetProjectsResult(projects);
     }
