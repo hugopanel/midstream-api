@@ -25,7 +25,7 @@ namespace Infrastructure
             services.AddAuth(configuration);
 
             services.AddDbContext<UserDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("postgres")));
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
             services.AddSingleton<MongoDbContext>();
 
