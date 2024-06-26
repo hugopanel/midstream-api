@@ -153,6 +153,7 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Teams");
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("Domain.User.User", b =>
@@ -236,7 +237,9 @@ namespace Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("Domain.Entities.Team", b =>
+            modelBuilder.Entity("Domain.Entities.Team", b =>
                 {
+                    b.Navigation("Members");
                     b.Navigation("Members");
                 });
 #pragma warning restore 612, 618
