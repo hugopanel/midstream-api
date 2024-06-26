@@ -164,8 +164,6 @@ public class TaskController : ControllerBase
     [HttpPost("UpdateTasks")]
     public async Task<IActionResult> UpdateTasks(UpdateTasksRequest request)
     {
-        Console.WriteLine("UpdateTasks");
-        Console.WriteLine(request.tasks);
         try
         {
             var command = new UpdateTasksCommand(request.tasks);
