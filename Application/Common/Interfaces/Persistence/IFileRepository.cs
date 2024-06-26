@@ -7,5 +7,6 @@ public interface IFileRepository
     List<FileApp>? GetFiles(string idProject);
     FileApp GetFile(string idFile);
     void AddFile(FileApp fileDb);
+    void DeleteFile(FileApp fileDb);
 
 }

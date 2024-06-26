@@ -42,4 +42,8 @@ public class FileRepository : IFileRepository
 
 
     }
+    public void DeleteFile(FileApp fileDb)
+    {
+        _dbContext.GetCollection<FileApp>("myCollection").DeleteOne(t => t.Id == fileDb.Id);
+    }
 }

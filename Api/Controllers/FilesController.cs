@@ -80,4 +80,21 @@ public class FilesController : ControllerBase
         }
     }
 
+    // delete file
+    [HttpDelete("Delete")]
+    public async Task<IActionResult> DeleteFile(string fileId)
+    {
+        try
+        {
+            var command = new DeleteFileCommand(fileId);
+            DeleteFileResult result = await _mediator.Send(command);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = ex.Message;
+            return BadRequest(errorMessage);
+        }
+    }
+
 }
