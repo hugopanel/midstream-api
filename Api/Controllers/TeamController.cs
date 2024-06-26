@@ -296,6 +296,25 @@ public class TeamController : ControllerBase
         }
     }
 
+    [Authorize]
+    [HttpGet("GetProjectByUser")]
+    public async Task<IActionResult> GetProjectsByUser()
+    {
+        try
+        {
+            var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+            var query = new GetProjectsByUserQuery(Id.ToString());
+            ListProjectsResult result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the teams.");
+            return BadRequest(errorMessage);
+        }
+    }
+
     [HttpGet("GetRoles")]
     public async Task<IActionResult> GetRoles()
     {
