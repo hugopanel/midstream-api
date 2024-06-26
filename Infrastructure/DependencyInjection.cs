@@ -25,7 +25,7 @@ namespace Infrastructure
             services.AddAuth(configuration);
 
             services.AddDbContext<UserDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+                options.UseNpgsql(configuration.GetConnectionString("postgres")));
 
             services.AddSingleton<MongoDbContext>();
 
@@ -36,30 +36,9 @@ namespace Infrastructure
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IEmailService, EmailService>();
 
-
-
-
             services.AddScoped<IFileRepository, FileRepository>();
             services.AddScoped<IModuleRepository, ModuleRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
-
-
-
-            // Configuration MongoDB
-            // var mongoDbSettings = new MongoDbSettings();
-            // configuration.GetSection("MongoDB").Bind(mongoDbSettings);
-
-            // services.AddSingleton<IMongoClient, MongoClient>(sp =>
-            // {
-            //     return new MongoClient(mongoDbSettings.ConnectionString);
-            // });
-
-            // services.AddSingleton(sp =>
-            // {
-            //     var client = sp.GetRequiredService<IMongoClient>();
-            //     return client.GetDatabase(mongoDbSettings.DatabaseName);
-            // });
-            // services.AddScoped<IFileRepository, FileRepository>();
             
             return services;
         }
