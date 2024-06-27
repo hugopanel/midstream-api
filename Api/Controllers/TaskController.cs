@@ -144,6 +144,23 @@ public class TaskController : ControllerBase
         }
     }
 
+    [HttpGet("GetTaskToEdit")]
+    public async Task<IActionResult> GetTaskToEdit(string taskId)
+    {
+        try
+        {
+            var query = new GetTaskToEditQuery(taskId);
+            TaskToEditResult result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the tasks.");
+            return BadRequest(errorMessage);
+        }
+    }
+
     [Authorize]
     [HttpPost("CreateTask")]
     public async Task<IActionResult> CreateTask(CreateTaskRequest request)
