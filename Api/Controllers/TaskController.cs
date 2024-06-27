@@ -196,4 +196,21 @@ public class TaskController : ControllerBase
             return BadRequest(errorMessage);
         }
     }
+
+    [HttpPost("DeleteTask")]
+    public async Task<IActionResult> DeleteTask(DeleteTaskRequest request)
+    {
+        try
+        {
+            var command = new DeleteTaskCommand(request.taskId);
+            MessageResult result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the tasks.");
+            return BadRequest(errorMessage);
+        }
+    }
 }
