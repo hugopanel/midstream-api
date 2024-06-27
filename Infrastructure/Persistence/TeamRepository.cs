@@ -26,6 +26,11 @@ namespace Infrastructure.Repositories
             return _dbContext.Teams.SingleOrDefault(t => t.Id.ToString() == id);
         }
 
+        public Team? GetTeamByProjectId(string projectId)
+        {
+            return _dbContext.Teams.SingleOrDefault(t => t.ProjectId.ToString() == projectId);
+        }
+
         public string GetTeamNameById(string id)
         {
             return _dbContext.Teams.SingleOrDefault(t => t.Id.ToString() == id)?.Name;
@@ -35,6 +40,7 @@ namespace Infrastructure.Repositories
         {
             return _dbContext.Teams.SingleOrDefault(t => t.Id.ToString() == id)?.ProjectId.ToString();
         }
+
 
         public void Add(Team team)
         {

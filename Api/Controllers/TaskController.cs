@@ -144,19 +144,21 @@ public class TaskController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpPost("CreateTask")]
     public async Task<IActionResult> CreateTask(CreateTaskRequest request)
     {
         try
         {
-            var command = new CreateTaskCommand(DateTime.ParseExact(request.BeginningDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTime.ParseExact(request.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), request.Priority, request.Status, request.TypeOfTask, request.Title, request.Description, request.Belong, request.Author, request.AssignedTo, request.RelatedTo);
+            var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+            var command = new CreateTaskCommand(DateTime.ParseExact(request.BeginningDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTime.ParseExact(request.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), request.Priority, request.Status, request.TypeOfTask, request.Title, request.Description, request.Belong, Id.ToString(), request.AssignedTo, request.RelatedTo);
             TaskResult result = await _mediator.Send(command);
 
             return Ok(result);
         }
         catch (Exception ex)
         {
-            var errorMessage = new AuthenticationResponseMessage("Error during the get of the tasks.");
+            var errorMessage = new AuthenticationResponseMessage(ex.Message);
             return BadRequest(errorMessage);
         }
     }
