@@ -1,4 +1,4 @@
 ﻿using MediatR;
 namespace Application.Modules.Queries;
 
-public record GetRecommendedModulesQuery(string descriptionRequest) : IRequest<GetModulesResult>;
+public record GetRecommendedModulesQuery(string DescriptionRequest) : IRequest<GetModulesResult>;

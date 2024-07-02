@@ -14,6 +14,9 @@ using Infrastructure.MongoDb;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
+using Application.Common.Interfaces;
+using Infrastructure.Services;
+using Infrastructure.Configuration;
 
 namespace Infrastructure
 {
@@ -22,6 +25,8 @@ namespace Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services,
             ConfigurationManager configuration)
         {
+            services.AddHttpClient<IPredictionService, PredictionService>();
+
             services.AddAuth(configuration);
 
             services.AddDbContext<UserDbContext>(options =>
@@ -39,6 +44,8 @@ namespace Infrastructure
             services.AddScoped<IFileRepository, FileRepository>();
             services.AddScoped<IModuleRepository, ModuleRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
+
+            services.Configure<FlaskApiSettings>(configuration.GetSection("FlaskApi")); 
             
             return services;
         }

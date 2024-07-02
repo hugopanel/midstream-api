@@ -1,36 +1,34 @@
-﻿
+﻿using System.Net.Http;
+using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
+using System.Threading;
+using System.Threading.Tasks;
 using Application.Common.Interfaces.Persistence;
 using Domain.Entities;
 using MediatR;
+using System.Collections.Generic;
+using Domain.Interfaces;
+using Application.Common.Interfaces;
 
-namespace Application.Modules.Queries;
-
-public class GetRecommendedModulesQueryHandler(IModuleRepository moduleRepository)
-    :IRequestHandler<GetRecommendedModulesQuery, GetModulesResult>
+namespace Application.Modules.Queries
 {
-    private IModuleRepository _moduleRepository = moduleRepository;
-
-    public async Task<GetModulesResult> Handle(GetRecommendedModulesQuery request, CancellationToken cancellationToken)
+    public class GetRecommendedModulesQueryHandler : IRequestHandler<GetRecommendedModulesQuery, GetModulesResult>
     {
-        List<Module> allModules = _moduleRepository.GetAllModules();
-        List<Module> modules = new List<Module>();
-        if (request.descriptionRequest == null)
-        {            
-            throw new Exception("Description is required");
-        }
-        else
-        {            
-            foreach (var module in allModules)
-            {
-                if (module.Tags.Any(tag => request.descriptionRequest.Contains(tag)))
-                {
-                    modules.Add(module);
-                }
-            }
-        }        
-        return new GetModulesResult(modules);
-    }
+        private readonly IModuleRepository _moduleRepository;
+        private readonly IPredictionService _predictionService;
 
+        public GetRecommendedModulesQueryHandler(IModuleRepository moduleRepository, IPredictionService predictionService)
+        {
+            _moduleRepository = moduleRepository;
+            _predictionService = predictionService;
+        }
+
+        public async Task<GetModulesResult> Handle(GetRecommendedModulesQuery request, CancellationToken cancellationToken)
+        {
+            var recommendedModules = await _predictionService.GetRecommendedModulesAsync(request.DescriptionRequest);
+            Console.WriteLine("Recommended modules: " + string.Join(", ", recommendedModules));
+            var modules = _moduleRepository.GetModulesByNames(recommendedModules.ToArray());
+            return new GetModulesResult(modules);
+        }
+    }
 }

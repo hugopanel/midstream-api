@@ -14,7 +14,7 @@ public class GetAllModulesQueryHandler(IModuleRepository moduleRepository)
 
     public async Task<GetModulesResult> Handle(GetAllModulesQuery request, CancellationToken cancellationToken)
     {
-        var modules = _moduleRepository.GetAllModules();        
+        var modules = _moduleRepository.GetModules();        
         return new GetModulesResult(modules);
     }
 

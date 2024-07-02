@@ -13,7 +13,8 @@ namespace Infrastructure.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Permission> Permission { get; set; }
-        public DbSet<Project> Project { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Module> Modules { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<RolePermission> RolePermission { get; set; }
         public DbSet<Member> Members { get; set; }
@@ -39,7 +40,12 @@ namespace Infrastructure.Data
             {
                 entity.HasKey(mr => new { mr.MemberId, mr.RoleId });
             });
-                
+
+            modelBuilder.Entity<Module>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+            });    
 
             modelBuilder.Entity<Project>(entity =>
             {
@@ -56,24 +62,6 @@ namespace Infrastructure.Data
             {
                 entity.HasKey(e => e.Id);
             });
-
-            /* modelBuilder.Entity<Member>()
-                .HasMany(m => m.Roles)
-                .WithMany(r => r.Members)
-                .UsingEntity<Dictionary<string, object>>(
-                    "MemberRole",
-                    j => j.HasOne<Role>().WithMany().HasForeignKey("RoleId"),
-                    j => j.HasOne<Member>().WithMany().HasForeignKey("MemberId"));
-
-            modelBuilder.Entity<Role>()
-                .HasMany(r => r.Permissions)
-                .WithOne()
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<Role>()
-                .HasOne(r => r.Project)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Cascade);*/
         }
     }
 }
