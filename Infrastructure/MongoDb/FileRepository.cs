@@ -1,49 +1,52 @@
-﻿using System.Text.Json;
-using System.Text.Json.Nodes;
+﻿using System;
+using System.Collections.Generic;
 using Application.Common.Interfaces.Persistence;
 using Domain.Entities;
 using MongoDB.Driver;
 
-
-namespace Infrastructure.MongoDb;
-public class FileRepository : IFileRepository
+namespace Infrastructure.MongoDb
 {
-    private readonly MongoDbContext _dbContext;
-
-    public FileRepository(MongoDbContext dbContext)
+    public class FileRepository : IFileRepository
     {
-        _dbContext = dbContext;
-    }
+        private readonly MongoDbContext _dbContext;
+        private readonly IMongoCollection<FileApp> _fileCollection;
 
-
-    public List<FileApp>? GetFiles(string Belong)
-    {
-        return _dbContext.GetCollection<FileApp>("myCollection").Find(t => t.Belong == Belong).ToList();
-    }
-
-    public FileApp GetFile(string Id)
-    {
-        return _dbContext.GetCollection<FileApp>("myCollection").Find(t => t.Id == Id).SingleOrDefault();
-    }
-
-    public void AddFile(FileApp fileDb)
-    {
-        try
+        public FileRepository(MongoDbContext dbContext)
         {
- 
-             _dbContext.GetCollection<FileApp>("myCollection").InsertOne(fileDb);
-
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
+            _dbContext = dbContext;
+            _fileCollection = _dbContext.GetCollection<FileApp>("Files");
         }
 
+        // Récupérer tous les fichiers appartenant à un certain projet
+        public List<FileApp> GetFiles(string belong)
+        {
+            return _fileCollection.Find(f => f.Belong == belong).ToList();
+        }
 
-    }
-    public void DeleteFile(FileApp fileDb)
-    {
-        _dbContext.GetCollection<FileApp>("myCollection").DeleteOne(t => t.Id == fileDb.Id);
+        // Récupérer un fichier par son Id
+        public FileApp GetFile(string id)
+        {
+            return _fileCollection.Find(f => f.Id == id).SingleOrDefault();
+        }
+
+        // Ajouter un nouveau fichier
+        public void AddFile(FileApp fileDb)
+        {
+            try
+            {
+                _fileCollection.InsertOne(fileDb);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        // Supprimer un fichier
+        public void DeleteFile(FileApp fileDb)
+        {
+            _fileCollection.DeleteOne(f => f.Id == fileDb.Id);
+        }
     }
 }
