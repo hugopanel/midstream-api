@@ -61,5 +61,10 @@ namespace Infrastructure.MongoDb
         {
             _dbContext.GetCollection<Tache>("myCollection").ReplaceOne(t => t.Id == task.Id, task);
         }
+
+        public void Delete(string id)
+        {
+            _dbContext.GetCollection<Tache>("myCollection").DeleteOne(t => t.Id == id);
+        }
     }
 }

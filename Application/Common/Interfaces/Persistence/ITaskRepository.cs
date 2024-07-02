@@ -16,4 +16,6 @@ public interface ITaskRepository
     void Add(Tache task);
 
     void Save(Tache task);
+
+    void Delete(string id);
 }

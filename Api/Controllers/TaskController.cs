@@ -144,13 +144,13 @@ public class TaskController : ControllerBase
         }
     }
 
-    [HttpPost("CreateTask")]
-    public async Task<IActionResult> CreateTask(CreateTaskRequest request)
+    [HttpGet("GetTaskToEdit")]
+    public async Task<IActionResult> GetTaskToEdit(string taskId)
     {
         try
         {
-            var command = new CreateTaskCommand(DateTime.ParseExact(request.BeginningDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTime.ParseExact(request.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), request.Priority, request.Status, request.TypeOfTask, request.Title, request.Description, request.Belong, request.Author, request.AssignedTo, request.RelatedTo);
-            TaskResult result = await _mediator.Send(command);
+            var query = new GetTaskToEditQuery(taskId);
+            TaskToEditResult result = await _mediator.Send(query);
 
             return Ok(result);
         }
@@ -161,12 +161,48 @@ public class TaskController : ControllerBase
         }
     }
 
+    [Authorize]
+    [HttpPost("CreateTask")]
+    public async Task<IActionResult> CreateTask(CreateTaskRequest request)
+    {
+        try
+        {
+            var Id = Guid.Parse(User.Claims.FirstOrDefault(c => c.Type == "id")?.Value);
+            var command = new CreateTaskCommand(DateTime.ParseExact(request.BeginningDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), DateTime.ParseExact(request.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture), request.Priority, request.Status, request.TypeOfTask, request.Title, request.Description, request.Belong, Id.ToString(), request.AssignedTo, request.RelatedTo);
+            TaskResult result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage(ex.Message);
+            return BadRequest(errorMessage);
+        }
+    }
+
     [HttpPost("UpdateTasks")]
     public async Task<IActionResult> UpdateTasks(UpdateTasksRequest request)
     {
         try
         {
             var command = new UpdateTasksCommand(request.tasks);
+            MessageResult result = await _mediator.Send(command);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the tasks.");
+            return BadRequest(errorMessage);
+        }
+    }
+
+    [HttpPost("DeleteTask")]
+    public async Task<IActionResult> DeleteTask(DeleteTaskRequest request)
+    {
+        try
+        {
+            var command = new DeleteTaskCommand(request.taskId);
             MessageResult result = await _mediator.Send(command);
 
             return Ok(result);
