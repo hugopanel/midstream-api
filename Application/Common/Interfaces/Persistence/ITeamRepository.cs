@@ -8,6 +8,7 @@ public interface ITeamRepository
     List<Team> GetTeams();
 
     Team? GetTeamById(string id);
+    Team? GetTeamByProjectId(string projectId);
     string GetTeamNameById(string id);
     string GetProjectIdByTeamId(string id);
 

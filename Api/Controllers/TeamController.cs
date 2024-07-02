@@ -209,6 +209,23 @@ public class TeamController : ControllerBase
         }
     }
 
+    [HttpGet("GetMembersByProject")]
+    public async Task<IActionResult> GetMembersByProject(string projectId)
+    {
+        try
+        {
+            var query = new GetMembersByProjectQuery(projectId);
+            ListMembersToSelectResult result = await _mediator.Send(query);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            var errorMessage = new AuthenticationResponseMessage("Error during the get of the members.");
+            return BadRequest(errorMessage);
+        }
+    }
+
     [HttpGet("GetMembersNotInTeam")]
     public async Task<IActionResult> GetMembersNotInTeam(string teamId)
     {
