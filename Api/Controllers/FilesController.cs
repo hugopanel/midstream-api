@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Api.Models;
@@ -6,6 +7,7 @@ using Domain.Entities;
 using MediatR;
 using Application.Files.Queries;
 using Application.Files;
+using Domain.Permissions.File;
 
 
 namespace Api.Controllers;
@@ -23,6 +25,11 @@ public class FilesController : ControllerBase
     [HttpGet("GetAll")]
     public async Task<IActionResult> GetAllFiles()
     {
+        if (User.Claims.FirstOrDefault(c => c == FilePermissions.Read) is null)
+        {
+            return Unauthorized("You do not have permission to view files.");
+        }
+        
         try
         {
             var command = new GetAllFilesQuery();

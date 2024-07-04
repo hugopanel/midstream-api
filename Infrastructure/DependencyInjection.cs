@@ -11,6 +11,7 @@ using Infrastructure.Data;
 using Infrastructure.Email;
 using Infrastructure.Repositories;
 using Infrastructure.MongoDb;
+using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
@@ -29,19 +30,19 @@ namespace Infrastructure
 
             services.AddSingleton<MongoDbContext>();
 
+            services.AddScoped<IEmailService, EmailService>();
+            
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IMemberRepository, MemberRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
-            services.AddScoped<IEmailService, EmailService>();
-
-
-
-
             services.AddScoped<IFileRepository, FileRepository>();
             services.AddScoped<IModuleRepository, ModuleRepository>();
             services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+
+            services.AddSingleton<IRolePermissionsCache, RolePermissionsCache>();
 
 
 

@@ -5,7 +5,7 @@
       context: .
       dockerfile: Api/Dockerfile
   users-db:
-    image: postgres
+    image: postgres:15
     shm_size: 128mb
     volumes:
       - ./docker-volumes/users-db:/var/lib/postgresql/data

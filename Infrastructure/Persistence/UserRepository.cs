@@ -3,6 +3,7 @@ using Application.Common.Interfaces;
 using Application.Common.Interfaces.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
+using Domain.Interfaces;
 using Domain.User;
 using Domain.User.ValueObjects;
 using Infrastructure.Data;
@@ -50,6 +51,14 @@ namespace Infrastructure.Repositories
         public User? GetUserById(string id)
         {
             return _dbContext.Users.SingleOrDefault(u => u.Id.ToString() == id);
+        }
+
+        public List<Permission>? GetPermissionsFromUser(User user)
+        {
+            var permissions = (from mr in _dbContext.MemberRole
+                where mr.Member != null && mr.Member.User == user
+                select mr.Role.Permissions).FirstOrDefault();
+            return permissions;
         }
 
         public void Add(User user)

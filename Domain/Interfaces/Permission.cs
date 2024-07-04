@@ -7,7 +7,7 @@ public abstract class Permission
     public abstract string Action { get; set; }
     public abstract string Description { get; set; }
     public override string ToString() => Action;
-    public string Code => Action.GetHashCode().ToString();
+    public abstract string Code { get; set; }
 
     // Operators 
     // TODO: Replace HashCode comparison with a shorter but unique code

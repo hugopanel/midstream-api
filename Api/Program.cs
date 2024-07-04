@@ -1,9 +1,12 @@
 using System.Reflection;
 using System.Runtime.Loader;
 using Api;
+using Api.Permissions;
 using Application;
 using Application.Common;
 using Application.Whiteboard;
+using Domain.Permissions;
+using Domain.Permissions.Administration;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -12,6 +15,8 @@ ModuleHandler moduleHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 {
+    builder.Services.AddMemoryCache();
+    
     // Add CORS
     builder.Services.AddCors(options =>
     {
@@ -94,8 +99,7 @@ var builder = WebApplication.CreateBuilder(args);
             }
         });
     });
-
-
+    
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -108,6 +112,10 @@ var builder = WebApplication.CreateBuilder(args);
     {
         module.ConfigureServices(builder.Services);
     }
+    
+    // Register the permissions using the IPermissionMapper interface
+    PermissionMapper.RegisterPermissionClass(typeof(AdministrationPermissions));
+    // TODO: Add the others, and those from the modules
 }
 
 var app = builder.Build();
@@ -126,6 +134,8 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<PermissionMiddleware>();
 
 app.MapControllers();
 app.MapHub<WhiteboardHub>("/hubs/whiteboard");

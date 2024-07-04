@@ -8,6 +8,8 @@ using Application.Teams.Queries;
 using Domain.Entities;
 using MediatR;
 using System.Linq.Expressions;
+using Api.Permissions;
+using Domain.Permissions.Administration;
 
 namespace Api.Controllers;
 
@@ -23,6 +25,8 @@ public class TeamController : ControllerBase
     }
 
     [HttpPost("CreateTeam")]
+    [Authorize]
+    [RequiresPermission(AdministrationPermissions.CreateTeamCode)] // TODO: Test this
     public async Task<IActionResult> CreateTeam(CreateTeamRequest request)
     {
         try

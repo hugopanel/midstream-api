@@ -17,6 +17,7 @@
 	<ItemGroup>
 		<Folder Include="Files\Commands\" />
 		<Folder Include="Modules\Commande\" />
+		<Folder Include="Permissions\" />
 		<Folder Include="Projects\Commands\" />
 		<Folder Include="Services\" />
 	</ItemGroup>

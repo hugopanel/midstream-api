@@ -1,10 +1,13 @@
+using Domain.Interfaces;
+
 namespace Domain.Entities
 {
     public class RolePermission
     {
-        public Guid Id { get; set; }
+        // public Guid Id { get; set; }
         public Guid RoleId { get; set; }
-        public Guid PermissionId { get; set; }
+        // public Guid PermissionId { get; set; }
+        public string? PermissionCode { get; set; }
         
         // Navigation Properties
         public Role? Role { get; set; }

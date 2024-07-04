@@ -8,6 +8,7 @@ using Application.Authentication.Queries;
 using Domain.Entities;
 using MediatR;
 using System.Linq.Expressions;
+using Application.Common.Commands;
 
 namespace Api.Controllers;
 
