@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aspect Category Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        input[type=text] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Aspect Category Prediction</h1>
+    <form id="predict-form">
+        <label for="description">Enter Description:</label><br>
+        <input type="text" id="description" name="description"><br>
+        <button type="submit">Predict</button>
+    </form>
+    <div class="output" id="output"></div>
+    <script>
+        document.getElementById('predict-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const description = document.getElementById('description').value;
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({description: description})
+            })
+            .then(response => response.json())
+            .then(data => {
+                const output = document.getElementById('output');
+                output.innerHTML = `<h3>Predicted Labels:</h3><p>${data.predicted_labels.join(', ')}</p>`;
+            });
+        });
+    </script>
+</body>
+</html>
