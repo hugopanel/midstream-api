@@ -3,7 +3,6 @@ using System.Runtime.Loader;
 using Api;
 using Application;
 using Application.Common;
-using Application.Whiteboard;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
@@ -101,8 +100,6 @@ var builder = WebApplication.CreateBuilder(args);
 
     builder.Services.AddAuthentication();
 
-    builder.Services.AddSignalR();
-
     // Let modules configure services
     foreach (var module in moduleHandler.Modules)
     {
@@ -128,6 +125,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<WhiteboardHub>("/hubs/whiteboard");
+
+// Let modules configure the app
+foreach (var module in moduleHandler.Modules)
+{
+    module.ConfigureApp(app);
+}
 
 app.Run();

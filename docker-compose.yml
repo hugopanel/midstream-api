@@ -11,7 +11,7 @@
       - ./docker-volumes/users-db:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 8764
+      POSTGRES_PASSWORD: 6210
       POSTGRES_DB: test
     ports:
       - 5432:5432

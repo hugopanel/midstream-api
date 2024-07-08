@@ -1,4 +1,5 @@
 using Domain.Entities;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Domain.Interfaces;
@@ -13,4 +14,5 @@ public interface IModule
     public string RoutePrefix { get; set; } // The prefix for the API routes (e.g. api:port/mymodule/action)
 
     void ConfigureServices(IServiceCollection services);
+    void ConfigureApp(WebApplication app);
 }
