@@ -13,7 +13,7 @@ namespace Infrastructure.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Permission> Permission { get; set; }
-        public DbSet<Project> Project { get; set; }
+        public DbSet<Project> Projects { get; set; }
         public DbSet<Role> Role { get; set; }
         public DbSet<RolePermission> RolePermission { get; set; }
         public DbSet<Member> Members { get; set; }

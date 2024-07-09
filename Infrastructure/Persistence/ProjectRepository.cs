@@ -18,33 +18,33 @@ namespace Infrastructure.Repositories
 
         public Project? GetProjectById(string id)
         {
-            return _dbContext.Project.SingleOrDefault(t => t.Id.ToString() == id);
+            return _dbContext.Projects.SingleOrDefault(t => t.Id.ToString() == id);
         }
         
         public Project? GetProjectByName(string name)
         {
-            return _dbContext.Project.SingleOrDefault(t => t.Name == name);
+            return _dbContext.Projects.SingleOrDefault(t => t.Name == name);
         }
 
         public List<Project> GetProjects()
         {
-            return _dbContext.Project.ToList();
+            return _dbContext.Projects.ToList();
         }
 
         public List<Project> GetProjectsWithoutTeam()
         {
-            return _dbContext.Project.Where(p => !_dbContext.Teams.Any(t => t.ProjectId == p.Id)).ToList();
+            return _dbContext.Projects.Where(p => !_dbContext.Teams.Any(t => t.ProjectId == p.Id)).ToList();
         }
 
         public void Add(Project project)
         {
-            _dbContext.Project.Add(project);
+            _dbContext.Projects.Add(project);
             _dbContext.SaveChanges();
         }
 
         public void Save(Project project)
         {
-            _dbContext.Project.Update(project);
+            _dbContext.Projects.Update(project);
             _dbContext.SaveChanges();
         }
     }
